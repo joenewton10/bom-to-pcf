@@ -1,7 +1,41 @@
-# Method choices. Extended in Phase 4.
+# Method choices used by the engine.
 gwp_set: IPCC AR6 GWP100
 
 # PACT Technical Specification 3.0.3 requires DQR values from 1 to 5; 1 is the best score.
 dqr_scale:
   best: 1
   worst: 5
+
+mass_balance:
+  tolerance_share: 0.01 # unexplained mass allowed, as a share of product material inputs
+
+allocation:
+  scrap_recycling: cut_off # cut_off (no credit) or substitution
+  substitution:
+    burden_factor: PET_RESIN_RECYCLED
+    avoided_factor: PET_RESIN_VIRGIN
+  overhead_method: mass # mass or machine_hours
+  overhead_step_id: OH
+  overhead_machine_count: 5 # used by machine_hours only; representative value
+
+# An item is left out only if it is below flow_share on both mass and impact.
+# Items with no mass (energy, transport) are judged on impact alone.
+cut_off:
+  flow_share: 0.01
+  total_share: 0.05
+
+factors:
+  electricity: [EL_DE_GRID]
+  transport:
+    road: [HGV_TTW, HGV_WTT]
+  scrap:
+    incineration: [WASTE_INCIN_PET]
+
+# Stages whose quantities come from the converting site itself.
+primary_share:
+  site_stages: [converting_energy, site_overhead, scrap_treatment]
+
+# Inside the boundary but not modelled, so reported with every result.
+known_omissions:
+  - Site heating (the routing data has no heating use)
+  - Making the PE bag from LDPE resin

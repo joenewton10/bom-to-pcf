@@ -5,17 +5,25 @@ finished_material: "500100"
 part_mass_g: 2.5
 reference_year: 2025
 input_dir: data/input
+method_file: config/method.yaml
+factors_file: data/factors/emission_factors.csv
+sources_file: data/factors/SOURCES.md
+mappings_file: data/mappings/bom_to_dataset.csv
 
-# Converts BOM units (M2, ST) to kg.
+# Converts BOM units (M2, ST) to kg. Materials are product material unless marked packaging.
 materials:
+  "100004": # Corrugated box
+    role: packaging
   "100001": # PET film
     density_kg_m3: 1390
     thickness_um: 125
   "100003": # Silicone release liner
     grammage_g_m2: 60
   "100005": # PE bag
+    role: packaging
     kg_per_piece: 0.012
   "100006": # Pallet
+    role: packaging
     kg_per_piece: 20
 
 validation:

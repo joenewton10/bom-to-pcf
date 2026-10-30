@@ -18,6 +18,13 @@ While these are placeholders, both materials fall back to secondary data, and th
 
 While either factor is a placeholder, results must be labelled `DRAFT — contains placeholders`.
 
+## Inside the boundary but not modelled
+
+- Site heating: the routing data has no heating use.
+- Making the PE bag: only the LDPE resin is counted.
+
+These are listed in `config/method.yaml` and reported with every result.
+
 ## Weak factors (sourced, but a poor fit)
 
 | Factor | Weakness |
@@ -48,4 +55,5 @@ published source, and they are not emission factors.
 - Material properties: film density and thickness, liner grammage, mass per piece (`product_pet_diecut.yaml`)
 - Machine power, throughput, utilisation and scrap rates (`routing_energy_mock.csv`)
 - Transport distances (`transport_legs.csv`)
+- Machine count for machine-hours overhead allocation (`config/method.yaml`)
 - Supplier names, which are fictional (`suppliers.csv`)

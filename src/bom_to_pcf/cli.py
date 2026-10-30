@@ -8,8 +8,10 @@ from rich.console import Console
 from rich.table import Table
 
 from bom_to_pcf import __version__
+from bom_to_pcf.engine.python_engine import run_pcf
+from bom_to_pcf.io.factor_store import load_factors, read_mappings
 from bom_to_pcf.io.inputs import load_inputs
-from bom_to_pcf.models import ProductConfig, issues_table
+from bom_to_pcf.models import MethodConfig, ProductConfig, issues_table
 
 app = typer.Typer(help="Calculate product carbon footprints from a bill of materials.")
 
@@ -23,6 +25,31 @@ def main() -> None:
 def version() -> None:
     """Print the installed version."""
     typer.echo(__version__)
+
+
+@app.command()
+def run(product: Annotated[Path, typer.Option(help="Product config YAML.")]) -> None:
+    """Calculate the footprint and print it with its status and data gaps."""
+    config = ProductConfig.from_yaml(product)
+    method = MethodConfig.from_yaml(config.method_file)
+    factors, _ = load_factors(config.factors_file, config.sources_file)
+    mappings, _ = read_mappings(config.mappings_file)
+    result = run_pcf(load_inputs(config), config, method, factors, mappings)
+    console = Console(width=140)
+    console.print(result.status_label, markup=False)
+    console.print(f"{result.kg_co2e_per_kg:.3f} kg CO2e per kg", markup=False)
+    console.print(f"{result.kg_co2e_per_1000_pieces:.3f} kg CO2e per 1,000 pieces", markup=False)
+    console.print(f"Primary data share: {result.primary_data_share:.1%}", markup=False)
+    console.print(f"DQR (1 best, 5 worst): {result.dqr.overall:.2f}", markup=False)
+    for stage, impact in result.by_stage.items():
+        console.print(f"  {stage}: {impact:.3f}", markup=False)
+    for text in [*result.missing, *result.draft_reasons]:
+        console.print(f"- {text}", markup=False)
+    console.print(
+        f"Left out by cut-off ({result.excluded_share:.1%} of known impact): "
+        f"{sorted({x.item for x in result.excluded})}",
+        markup=False,
+    )
 
 
 @app.command("validate-inputs")

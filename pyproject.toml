@@ -35,6 +35,7 @@ packages = ["src/bom_to_pcf"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["tests"]
 addopts = "--cov=bom_to_pcf --cov-report=term-missing"
 
 [tool.ruff]

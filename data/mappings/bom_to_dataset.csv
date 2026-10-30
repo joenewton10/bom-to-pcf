@@ -1,0 +1,8 @@
+material_number,factor_id,review_status
+100001,PET_RESIN_VIRGIN,unreviewed
+100001,PET_FILM_CONVERSION,unreviewed
+100002,ADHESIVE_ACRYLIC,unreviewed
+100003,LINER_SILICONE,unreviewed
+100004,BOX_CORRUGATED,unreviewed
+100005,PE_LDPE,unreviewed
+100006,PALLET_WOOD,unreviewed

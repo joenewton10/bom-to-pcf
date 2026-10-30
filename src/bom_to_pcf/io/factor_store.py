@@ -6,7 +6,9 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from bom_to_pcf.io.parsing import missing_columns, parse_decimal, read_bytes, read_rows
-from bom_to_pcf.models import EmissionFactor, Issue, Severity
+from bom_to_pcf.models import EmissionFactor, Issue, Mapping, Severity
+
+MAPPING_COLUMNS = ["material_number", "factor_id", "review_status"]
 
 FACTOR_COLUMNS = [
     "factor_id",
@@ -95,6 +97,36 @@ def load_factors(
             )
         loaded.append(factor)
     return loaded, issues
+
+
+def read_mappings(source: Path | str | bytes) -> tuple[list[Mapping], list[Issue]]:
+    """Read links between BOM materials and emission factors."""
+    rows = read_rows(source)
+    missing = missing_columns(rows, MAPPING_COLUMNS)
+    if missing:
+        return [], [
+            _issue(
+                Severity.ERROR,
+                "missing_columns",
+                f"The mapping file is empty or lacks columns: {', '.join(missing)}.",
+            )
+        ]
+    mappings: list[Mapping] = []
+    issues: list[Issue] = []
+    for row_number, row in rows:
+        try:
+            mappings.append(Mapping(**row))
+        except ValidationError:
+            issues.append(
+                _issue(
+                    Severity.ERROR,
+                    "invalid_mapping",
+                    f"Mapping for {row['material_number']} dropped: unknown review status "
+                    f"'{row['review_status']}'.",
+                    row_number,
+                )
+            )
+    return mappings, issues
 
 
 def _sourcing_problem(factor: EmissionFactor, known_sources: set[str]) -> str | None:

@@ -1,5 +1,15 @@
 # Changelog
 
+## Phase 4 — Inventory & calculation engine
+
+- Mass balance check, inventory builder and Python engine, with results per kg and per 1,000 pieces.
+- Allocation: recycling cut-off or substitution; site overhead by mass or machine hours.
+- Cut-off rule with a reported exclusion list and share, data quality aggregation, primary data share.
+- Results with missing data are labelled as a partial total, so they cannot be read as complete.
+- Hand-calculated reference case in `tests/fixtures/reference_case.yaml`.
+- Factor mappings in `data/mappings/bom_to_dataset.csv`, all unreviewed until Phase 6.
+- `pcf run` command.
+
 ## Phase 3 — Emission factors & sources
 
 - `emission_factors.csv` with 13 sourced factors and 2 placeholders; `SOURCES.md` says where each

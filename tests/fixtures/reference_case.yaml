@@ -1,0 +1,88 @@
+# Hand-calculated reference case. All numbers are round test values, not emission data.
+#
+# Product: 1000 pieces of 2 g = 2 kg base.
+# BOM per kg product: film 2.5/2 = 1.25 kg; box 0.1/2 = 0.05 kg.
+#
+# Mass: S2 has no scrap, input 1 kg. S1 scraps 20%, input 1/0.8 = 1.25 kg, scrap 0.25 kg.
+# Balance: 1.25 in = 1 product + 0.25 scrap, so it closes exactly.
+#
+# Energy, kWh per kg = power x utilisation / throughput x mass through the step:
+#   S1 10 x 1 / 100 x 1.25 = 0.125;  S2 5 x 1 / 50 x 1 = 0.100;  OH 40 x 0.5 / 200 = 0.100
+#   Total 0.325 kWh x 0.4 = 0.130 kg CO2e
+#
+# Materials: film 1.25 x 2.0 = 2.500;  box 0.05 x 1.0 = 0.050
+# Transport, tkm x (0.10 + 0.02):
+#   T1 film 1.25/1000 x 400 = 0.5 tkm  -> 0.0600
+#   T2 box  0.05/1000 x 200 = 0.01 tkm -> 0.0012
+# Scrap to recycling under cut-off: 0
+#
+# Before cut-off: 2.500 + 0.050 + 0.130 + 0.0600 + 0.0012 = 2.7412
+# Cut-off at 1%: only T2 (0.04% of impact, no mass) is below it. OH is 0.04 = 1.46%, so it stays.
+# Result: 2.7400 kg CO2e/kg, and 2.7400 x 2 = 5.4800 per 1000 pieces.
+#
+# Primary share: site stages are S1, S2, OH energy = 0.130 / 2.74 = 4.7445%.
+# DQR is weighted by impact. Technological: film 1, box 3, transport 2, electricity 4:
+#   (1x2.5 + 3x0.05 + 2x0.06 + 4x0.13) / 2.74 = 3.29 / 2.74 = 1.20073
+product:
+  product_id: REF
+  name: Reference
+  finished_material: "900"
+  part_mass_g: 2
+  reference_year: 2025
+  input_dir: unused
+  materials:
+    "2":
+      role: packaging
+  validation:
+    bom_valid_from_max_age_years: 10
+    supplier_pcf_max_age_years: 3
+    scrap_destinations: [recycling, incineration, none]
+bom:
+  - { material: "1", description: Film, qty_kg: 2.5 }
+  - { material: "2", description: Box, qty_kg: 0.1 }
+routing:
+  - { id: S1, throughput: 100, power: 10, utilisation: 1.0, scrap: 0.2, destination: recycling }
+  - { id: S2, throughput: 50, power: 5, utilisation: 1.0, scrap: 0.0, destination: none }
+  - { id: OH, throughput: 200, power: 40, utilisation: 0.5, scrap: 0.0, destination: none }
+transport:
+  - { id: T1, material: "1", km: 400 }
+  - { id: T2, material: "2", km: 200 }
+factors:
+  - { id: FILM, value: 2.0, unit: kg CO2e/kg, dqr: 1 }
+  - { id: BOX, value: 1.0, unit: kg CO2e/kg, dqr: 3 }
+  - { id: ELEC, value: 0.4, unit: kg CO2e/kWh, dqr: 4 }
+  - { id: ROAD, value: 0.10, unit: kg CO2e/tkm, dqr: 2 }
+  - { id: ROAD_WTT, value: 0.02, unit: kg CO2e/tkm, dqr: 2 }
+  - { id: BURN, value: 3.0, unit: kg CO2e/kg, dqr: 3 }
+  - { id: REC, value: 0.5, unit: kg CO2e/kg, dqr: 3 }
+  - { id: VIRGIN, value: 2.0, unit: kg CO2e/kg, dqr: 3 }
+mappings:
+  - { material: "1", factor: FILM }
+  - { material: "2", factor: BOX }
+method:
+  gwp_set: test
+  mass_balance: { tolerance_share: 0.01 }
+  allocation:
+    scrap_recycling: cut_off
+    substitution: { burden_factor: REC, avoided_factor: VIRGIN }
+    overhead_method: mass
+    overhead_step_id: OH
+    overhead_machine_count: 2
+  cut_off: { flow_share: 0.01, total_share: 0.05 }
+  factors:
+    electricity: [ELEC]
+    transport: { road: [ROAD, ROAD_WTT] }
+    scrap: { incineration: [BURN] }
+  primary_share: { site_stages: [converting_energy, site_overhead, scrap_treatment] }
+expected:
+  kg_co2e_per_kg: 2.74
+  kg_co2e_per_1000_pieces: 5.48
+  primary_data_share: 0.047445
+  dqr_technological: 1.20073
+  by_stage:
+    materials: 2.5
+    packaging: 0.05
+    inbound_transport: 0.06
+    converting_energy: 0.09
+    site_overhead: 0.04
+    scrap_treatment: 0.0

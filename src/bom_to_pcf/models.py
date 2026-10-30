@@ -43,6 +43,7 @@ class MaterialProperties(BaseModel):
     thickness_um: float | None = Field(default=None, gt=0)
     grammage_g_m2: float | None = Field(default=None, gt=0)
     kg_per_piece: float | None = Field(default=None, gt=0)
+    role: Literal["product", "packaging"] = "product"
 
     @property
     def kg_per_m2(self) -> float | None:
@@ -69,8 +70,17 @@ class ProductConfig(BaseModel):
     part_mass_g: float = Field(gt=0)
     reference_year: int
     input_dir: str
+    method_file: str = "config/method.yaml"
+    factors_file: str = "data/factors/emission_factors.csv"
+    sources_file: str = "data/factors/SOURCES.md"
+    mappings_file: str = "data/mappings/bom_to_dataset.csv"
     materials: dict[str, MaterialProperties]
     validation: ValidationRules
+
+    def role_of(self, material: str) -> str:
+        """A material's role. Unlisted materials count as product material."""
+        properties = self.materials.get(material)
+        return properties.role if properties else "product"
 
     @property
     def reference_date(self) -> date:
@@ -178,3 +188,131 @@ class TransportLeg(BaseModel):
     destination: str
     mode: str
     distance_km: float = Field(gt=0)
+
+
+class Mapping(BaseModel):
+    """Links a BOM material to one emission factor. A material may need several."""
+
+    material_number: str
+    factor_id: str
+    review_status: Literal["unreviewed", "approved", "rejected"]
+
+
+class SubstitutionFactors(BaseModel):
+    burden_factor: str
+    avoided_factor: str
+
+
+class AllocationRules(BaseModel):
+    scrap_recycling: Literal["cut_off", "substitution"]
+    substitution: SubstitutionFactors
+    overhead_method: Literal["mass", "machine_hours"]
+    overhead_step_id: str
+    overhead_machine_count: int = Field(gt=0)
+
+
+class CutOffRules(BaseModel):
+    flow_share: float = Field(ge=0, lt=1)
+    total_share: float = Field(ge=0, lt=1)
+
+
+class MassBalanceRules(BaseModel):
+    tolerance_share: float = Field(ge=0, lt=1)
+
+
+class FactorChoices(BaseModel):
+    electricity: list[str]
+    transport: dict[str, list[str]]
+    scrap: dict[str, list[str]]
+
+
+class PrimaryShareRules(BaseModel):
+    site_stages: list[str]
+
+
+class MethodConfig(BaseModel):
+    """Method choices loaded from YAML."""
+
+    gwp_set: str
+    mass_balance: MassBalanceRules
+    allocation: AllocationRules
+    cut_off: CutOffRules
+    factors: FactorChoices
+    primary_share: PrimaryShareRules
+    known_omissions: list[str] = []
+
+    @classmethod
+    def from_yaml(cls, path: str | Path) -> "MethodConfig":
+        return cls.model_validate(yaml.safe_load(Path(path).read_text(encoding="utf-8")))
+
+
+class LciLine(BaseModel):
+    """One inventory quantity per kg of finished product, linked to one factor."""
+
+    stage: str
+    item: str
+    description: str
+    quantity: float
+    unit: str
+    factor_id: str | None = None
+    mass_kg: float | None = None
+    note: str = ""
+
+
+class ResultLine(LciLine):
+    """An inventory line with its impact. `impact` is None while the factor has no value."""
+
+    impact: float | None
+
+
+class StepMass(BaseModel):
+    """Mass entering a process step, per kg of finished product."""
+
+    step_id: str
+    input_kg: float
+    scrap_kg: float
+    scrap_destination: str
+
+
+class MassBalance(BaseModel):
+    """Product material inputs against finished product plus scrap, per kg of product."""
+
+    inputs_kg: float
+    product_kg: float
+    scrap_kg: float
+    imbalance_kg: float
+    imbalance_share: float
+    tolerance_share: float
+    passed: bool
+    steps: list[StepMass]
+
+
+class DqrScore(BaseModel):
+    """Impact-weighted data quality, from 1 (best) to 5 (worst). None when no line has a score."""
+
+    technological: float | None
+    geographical: float | None
+    temporal: float | None
+    overall: float | None
+
+
+class PcfResult(BaseModel):
+    """A calculated footprint, with everything needed to judge how far to trust it."""
+
+    kg_co2e_per_kg: float
+    kg_co2e_per_1000_pieces: float
+    gwp_set: str
+    by_stage: dict[str, float]
+    by_material: dict[str, float]
+    lines: list[ResultLine]
+    excluded: list[ResultLine]
+    excluded_share: float
+    is_draft: bool
+    is_partial: bool
+    status_label: str
+    draft_reasons: list[str]
+    missing: list[str]
+    known_omissions: list[str]
+    primary_data_share: float
+    dqr: DqrScore
+    mass_balance: MassBalance
