@@ -1,6 +1,6 @@
 # bom-to-pcf: portfolio summary
 
-Live app: link to be added after deployment · [Code](https://github.com/joenewton10/bom-to-pcf)
+Live app: [bom-to-pcf.streamlit.app](https://bom-to-pcf.streamlit.app/) · [Code](https://github.com/joenewton10/bom-to-pcf)
 
 Most of what you need for a product carbon footprint already exists in a manufacturer's systems: the bill of
 materials, the routing, the energy use. What's missing is a repeatable way to turn that into a number you can

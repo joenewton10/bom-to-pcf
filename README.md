@@ -6,7 +6,7 @@ steps and energy use, then updates it as suppliers send real data.
 > Everything here is illustrative. The data is representative, the supplier names are fictional, and no real
 > company's data is used. This is not a verified PCF, so please don't use it for real claims.
 
-**Live app:** link to be added after deployment
+**Live app:** [bom-to-pcf.streamlit.app](https://bom-to-pcf.streamlit.app/)
 
 ![Start here page](docs/images/start_here.jpg)
 

@@ -6,6 +6,7 @@
 - `docs/portfolio_summary.md`.
 - A fresh clone installs from `requirements.txt` and runs in under 5 minutes.
 - Tests no longer rewrite the tracked example files.
+- Deployed to Streamlit Community Cloud: https://bom-to-pcf.streamlit.app/
 
 ## Phase 10 — Outputs & claims check
 
