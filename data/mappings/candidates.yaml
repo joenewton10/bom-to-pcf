@@ -1,0 +1,31 @@
+# What a BOM material can be matched to. A candidate may need several factors.
+# Terms are what text matching compares with BOM descriptions, including German trade names.
+candidates:
+  - id: pet_film_virgin
+    label: PET film, virgin (resin + film making)
+    terms: [PET-Folie, PET film, polyester film, BOPET]
+    factor_ids: [PET_RESIN_VIRGIN, PET_FILM_CONVERSION]
+  - id: pet_film_recycled
+    label: PET film, recycled (resin + film making)
+    terms: [rPET-Folie, recycled PET film, Rezyklat PET-Folie]
+    factor_ids: [PET_RESIN_RECYCLED, PET_FILM_CONVERSION]
+  - id: adhesive_acrylic
+    label: Water-based acrylic adhesive
+    terms: [Acrylat-Haftklebstoff, Haftklebstoff, Klebstoff, acrylic adhesive]
+    factor_ids: [ADHESIVE_ACRYLIC]
+  - id: liner_silicone
+    label: Silicone-coated release liner
+    terms: [Silikon-Trennpapier, Trennpapier, release liner, silicone liner]
+    factor_ids: [LINER_SILICONE]
+  - id: box_corrugated
+    label: Corrugated box
+    terms: [Karton, Versandbox, Wellpappe, corrugated box, cardboard]
+    factor_ids: [BOX_CORRUGATED]
+  - id: bag_ldpe
+    label: PE bag (LDPE resin)
+    terms: [PE-Beutel, Beutel, LDPE, polyethylene bag]
+    factor_ids: [PE_LDPE]
+  - id: pallet_wood
+    label: Wooden pallet
+    terms: [Palette, Holzpalette, wooden pallet, pallet]
+    factor_ids: [PALLET_WOOD]

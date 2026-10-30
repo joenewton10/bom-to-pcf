@@ -1,5 +1,13 @@
 # Changelog
 
+## Phase 6 — Matching & review
+
+- Text matching against `data/mappings/candidates.yaml`, top 3 with scores; a candidate can stand for several factors.
+- Optional AI suggestions, off by default, with a session call limit and fallback to text matching.
+- Match & review page with approve, reject, choose other and comments; append-only review log with download.
+- Final results need a decision on every material. Rejected materials become reported gaps.
+- `docs/ai_validation.md`.
+
 ## Phase 5 — Streamlit core
 
 - App shell with sidebar progress, disclaimer and the Start here page exactly as written in the plan (a test compares it to the plan).

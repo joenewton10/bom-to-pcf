@@ -142,11 +142,15 @@ _MATERIAL_STAGES = (STAGE_MATERIALS, STAGE_PACKAGING)
 
 
 def run_with_config(
-    config: ProductConfig, bundle: InputBundle, root: Path | str = "."
+    config: ProductConfig,
+    bundle: InputBundle,
+    root: Path | str = ".",
+    mappings: list[Mapping] | None = None,
 ) -> PcfResult:
-    """Run the calculation using the method, factor and mapping files named in the config."""
+    """Run the calculation with the config's files. Mappings default to the config's file."""
     base = Path(root)
     method = MethodConfig.from_yaml(base / config.method_file)
     factors, _ = load_factors(base / config.factors_file, base / config.sources_file)
-    mappings, _ = read_mappings(base / config.mappings_file)
+    if mappings is None:
+        mappings, _ = read_mappings(base / config.mappings_file)
     return run_pcf(bundle, config, method, factors, mappings)

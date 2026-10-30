@@ -74,6 +74,8 @@ class ProductConfig(BaseModel):
     factors_file: str = "data/factors/emission_factors.csv"
     sources_file: str = "data/factors/SOURCES.md"
     mappings_file: str = "data/mappings/bom_to_dataset.csv"
+    candidates_file: str = "data/mappings/candidates.yaml"
+    matching_file: str = "config/matching.yaml"
     materials: dict[str, MaterialProperties]
     validation: ValidationRules
 
@@ -196,6 +198,64 @@ class Mapping(BaseModel):
     material_number: str
     factor_id: str
     review_status: Literal["unreviewed", "approved", "rejected"]
+
+
+class Candidate(BaseModel):
+    """Something a BOM material can be matched to, with the factors it stands for."""
+
+    id: str
+    label: str
+    terms: list[str]
+    factor_ids: list[str]
+
+
+class MatchingConfig(BaseModel):
+    top_n: int = Field(gt=0)
+    llm_default_on: bool
+    llm_model: str
+    llm_effort: str
+    llm_max_tokens: int = Field(gt=0)
+    llm_session_call_limit: int = Field(ge=0)
+
+    @classmethod
+    def from_yaml(cls, path: str | Path) -> "MatchingConfig":
+        return cls.model_validate(yaml.safe_load(Path(path).read_text(encoding="utf-8")))
+
+
+class Suggestion(BaseModel):
+    """A proposed match. Confidence runs from 0 to 1; rationale comes from the LLM only."""
+
+    candidate_id: str
+    label: str
+    source: Literal["fuzzy", "llm"]
+    confidence: float = Field(ge=0, le=1)
+    rationale: str = ""
+
+
+class ReviewItem(BaseModel):
+    """One BOM material under review. The first suggestion is the one being proposed."""
+
+    material_number: str
+    description: str
+    uom: str
+    suggestions: list[Suggestion]
+    decision: Literal["pending", "approve", "reject", "choose_other"] = "pending"
+    chosen_id: str | None = None
+    comment: str = ""
+
+
+class ReviewLogEntry(BaseModel):
+    """One reviewer decision. The log is only ever added to."""
+
+    timestamp: str
+    bom_item: str
+    suggestion: str
+    source: str
+    confidence: float | None
+    decision: str
+    chosen: str
+    reviewer: str
+    comment: str
 
 
 class SubstitutionFactors(BaseModel):

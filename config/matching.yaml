@@ -1,0 +1,7 @@
+# Settings for matching BOM materials to emission factors.
+top_n: 3
+llm_default_on: false
+llm_model: claude-opus-5-5
+llm_effort: low
+llm_max_tokens: 2048
+llm_session_call_limit: 20
