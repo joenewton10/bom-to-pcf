@@ -1,0 +1,7 @@
+leg_id,material_number,supplier_id,origin,destination,mode,distance_km
+T1,100001,SUP-001,DE,DE01,road,350
+T2,100002,SUP-002,DE,DE01,road,280
+T3,100003,SUP-003,NL,DE01,road,520
+T4,100004,SUP-004,DE,DE01,road,120
+T5,100005,,DE,DE01,road,200
+T6,100006,SUP-005,DE,DE01,road,90

@@ -1,0 +1,32 @@
+{
+  "records": [
+    {
+      "supplier_id": "SUP-001",
+      "material_number": "100001",
+      "pcf_value": null,
+      "declared_unit": "kg",
+      "reference_period_start": "2024-01-01",
+      "reference_period_end": "2024-12-31",
+      "method": "ISO 14067",
+      "primary_data_share": null,
+      "dqr": null,
+      "boundary": "cradle-to-gate",
+      "status": "PLACEHOLDER",
+      "notes": "Mock record. Value not yet set; see docs/data_gaps.md."
+    },
+    {
+      "supplier_id": "SUP-002",
+      "material_number": "100002",
+      "pcf_value": null,
+      "declared_unit": "kg",
+      "reference_period_start": "2021-01-01",
+      "reference_period_end": "2021-12-31",
+      "method": "TfS",
+      "primary_data_share": null,
+      "dqr": null,
+      "boundary": "cradle-to-gate",
+      "status": "PLACEHOLDER",
+      "notes": "Mock record, deliberately expired. Value not yet set; see docs/data_gaps.md."
+    }
+  ]
+}

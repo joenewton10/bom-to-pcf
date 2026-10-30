@@ -1,0 +1,7 @@
+step_id,step_name,machine,throughput_kg_per_h,power_kw,utilisation,scrap_rate,scrap_destination
+S10,Slitting,Slitter 1,400,15,0.70,0.02,recycling
+S20,Laminating,Laminator 1,120,18,0.70,0.01,incineration
+S30,Die-cutting,Rotary die-cutter 1,80,22,0.75,0.12,incineration
+S40,Inspection,Vision inspection 1,60,3,0.80,0.005,incineration
+S50,Packaging,Packing line 1,100,4,0.60,0,none
+OH,Site overhead,Site services,150,60,1.00,0,none

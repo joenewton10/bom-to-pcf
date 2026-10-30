@@ -1,0 +1,8 @@
+material_number,material_description,parent_material,bom_level,component_qty,uom,base_qty,base_uom,item_category,plant,valid_from,supplier_id
+100001,PET-Folie 125 µm transparent,500100,1,"11,4",M2,1000,ST,L,DE01,01.03.2023,SUP-001
+100002,Acrylat-Haftklebstoff,500100,1,285,G,1000,ST,L,DE01,2023-03-01,SUP-002
+100003,Silikon-Trennpapier 60 g/m2,500100,1,"11,4",M2,1000,ST,L,DE01,2023-03-01,SUP-003
+100004,Karton Versandbox,500100,1,"0,18",KG,1000,ST,L,DE01,2023-03-01,SUP-004
+100004,Karton Versandbox,500100,1,"0,18",KG,1000,ST,L,DE01,2023-03-01,SUP-004
+100005,PE-Beutel,500100,1,1,ST,1000,ST,L,DE01,2023-03-01,
+100006,Palette Anteil,500100,1,0.002,ST,1000,ST,L,DE01,15.06.2009,SUP-005

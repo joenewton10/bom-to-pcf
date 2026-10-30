@@ -1,0 +1,24 @@
+# Die-cut PET film insulation part. All values are representative, not real company data.
+product_id: PET-DIECUT-125
+name: Die-cut PET film insulation part, 125 µm, adhesive-backed
+finished_material: "500100"
+part_mass_g: 2.5
+reference_year: 2025
+input_dir: data/input
+
+# Converts BOM units (M2, ST) to kg.
+materials:
+  "100001": # PET film
+    density_kg_m3: 1390
+    thickness_um: 125
+  "100003": # Silicone release liner
+    grammage_g_m2: 60
+  "100005": # PE bag
+    kg_per_piece: 0.012
+  "100006": # Pallet
+    kg_per_piece: 20
+
+validation:
+  bom_valid_from_max_age_years: 10
+  supplier_pcf_max_age_years: 3
+  scrap_destinations: [recycling, incineration, none]
