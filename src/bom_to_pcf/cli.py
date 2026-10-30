@@ -103,9 +103,11 @@ def export_pact(
 
 
 @app.command("make-examples")
-def make_examples() -> None:
-    """Regenerate the example outputs in outputs/examples."""
-    for name in write_examples():
+def make_examples(
+    folder: Annotated[Path | None, typer.Option(help="Defaults to outputs/examples.")] = None,
+) -> None:
+    """Regenerate the example outputs."""
+    for name in write_examples(".", folder):
         typer.echo(name)
 
 

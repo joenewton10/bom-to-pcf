@@ -167,10 +167,13 @@ def test_report_has_every_section_and_traces_lines() -> None:
     assert "not a statistical confidence interval" in report
 
 
-def test_examples_can_be_written(monkeypatch) -> None:
+def test_examples_can_be_written(monkeypatch, tmp_path) -> None:
     monkeypatch.chdir(ROOT)
-    assert "report.md" in write_examples(ROOT)
-    assert CliRunner().invoke(app, ["make-examples"]).exit_code == 0
+    assert "report.md" in write_examples(ROOT, tmp_path)
+    assert (tmp_path / "report.md").is_file()
+    result = CliRunner().invoke(app, ["make-examples", "--folder", str(tmp_path / "cli")])
+    assert result.exit_code == 0
+    assert (tmp_path / "cli" / "report.md").is_file()
 
 
 def test_run_is_saved_and_can_be_read_back(parts, tmp_path, monkeypatch) -> None:

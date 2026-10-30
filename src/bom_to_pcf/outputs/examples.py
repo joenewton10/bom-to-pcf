@@ -48,8 +48,8 @@ def build_examples(root: Path | str = ".") -> dict[str, str]:
     return files
 
 
-def write_examples(root: Path | str = ".") -> list[str]:
-    folder = Path(root) / "outputs" / "examples"
+def write_examples(root: Path | str = ".", folder: Path | str | None = None) -> list[str]:
+    folder = Path(folder) if folder else Path(root) / "outputs" / "examples"
     folder.mkdir(parents=True, exist_ok=True)
     files = build_examples(root)
     for name, content in files.items():

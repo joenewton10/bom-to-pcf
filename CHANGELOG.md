@@ -1,5 +1,12 @@
 # Changelog
 
+## Phase 11 — Deployment & portfolio polish
+
+- README with problem, approach, architecture, screenshots, standards mapping, limitations and how to run.
+- `docs/portfolio_summary.md`.
+- A fresh clone installs from `requirements.txt` and runs in under 5 minutes.
+- Tests no longer rewrite the tracked example files.
+
 ## Phase 10 — Outputs & claims check
 
 - PACT export validated against the official schema, version 3.0.3, pinned in `schemas/pact/`.
