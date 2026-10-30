@@ -1,10 +1,12 @@
 """Pure-Python calculation engine and the full calculation run."""
 
 from collections import defaultdict
+from pathlib import Path
 
 from bom_to_pcf.engine.base import Engine
 from bom_to_pcf.inventory.lci_builder import STAGE_MATERIALS, STAGE_PACKAGING, build_lci
 from bom_to_pcf.inventory.mass_balance import check_mass_balance
+from bom_to_pcf.io.factor_store import load_factors, read_mappings
 from bom_to_pcf.io.inputs import InputBundle
 from bom_to_pcf.methods.cutoff import apply_cut_off
 from bom_to_pcf.methods.data_quality import aggregate_dqr
@@ -34,12 +36,12 @@ class PythonEngine(Engine):
     def impacts(self, lines: list[LciLine], factors: dict[str, EmissionFactor]) -> list[ResultLine]:
         results = []
         for line in lines:
-            if line.factor_id is None:
-                impact = 0.0
-            else:
-                value = factors[line.factor_id].value
-                impact = None if value is None else line.quantity * value
-            results.append(ResultLine(**line.model_dump(), impact=impact))
+            impact, source_id = 0.0, ""
+            if line.factor_id is not None:
+                factor = factors[line.factor_id]
+                impact = None if factor.value is None else line.quantity * factor.value
+                source_id = factor.source_id
+            results.append(ResultLine(**line.model_dump(), impact=impact, source_id=source_id))
         return results
 
 
@@ -137,3 +139,14 @@ def run_pcf(
 
 
 _MATERIAL_STAGES = (STAGE_MATERIALS, STAGE_PACKAGING)
+
+
+def run_with_config(
+    config: ProductConfig, bundle: InputBundle, root: Path | str = "."
+) -> PcfResult:
+    """Run the calculation using the method, factor and mapping files named in the config."""
+    base = Path(root)
+    method = MethodConfig.from_yaml(base / config.method_file)
+    factors, _ = load_factors(base / config.factors_file, base / config.sources_file)
+    mappings, _ = read_mappings(base / config.mappings_file)
+    return run_pcf(bundle, config, method, factors, mappings)

@@ -1,5 +1,12 @@
 # Changelog
 
+## Phase 5 — Streamlit core
+
+- App shell with sidebar progress, disclaimer and the Start here page exactly as written in the plan (a test compares it to the plan).
+- Try the demo opens a full breakdown in one click. Upload & validate shows issues and the mass balance. Results shows the headline, breakdowns, draft reasons, omissions, cut-off list and a traceable inventory.
+- `docs/methodology.md`, describing the method as built; clause-level citations still to come.
+- Links on Start here for pages not built yet are disabled until their phases.
+
 ## Factor update after Phase 4
 
 - `PET_FILM_CONVERSION` and `LINER_SILICONE` are now labelled proxies built from sourced values, with

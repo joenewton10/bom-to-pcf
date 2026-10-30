@@ -23,3 +23,6 @@ data/app.db
 # Run outputs (curated examples are kept)
 outputs/*
 !outputs/examples/
+
+# Local tool settings
+.claude/

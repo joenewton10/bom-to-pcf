@@ -263,6 +263,7 @@ class ResultLine(LciLine):
     """An inventory line with its impact. `impact` is None while the factor has no value."""
 
     impact: float | None
+    source_id: str = ""
 
 
 class StepMass(BaseModel):

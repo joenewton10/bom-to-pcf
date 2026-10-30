@@ -1,5 +1,6 @@
 """Load a complete input set and check that its files agree with each other."""
 
+from collections.abc import Mapping
 from pathlib import Path
 
 from pydantic import BaseModel
@@ -42,28 +43,35 @@ class InputBundle(BaseModel):
 def load_inputs(config: ProductConfig, input_dir: Path | str | None = None) -> InputBundle:
     """Read all input files from a folder (default: the config's input_dir) and validate them."""
     folder = Path(input_dir if input_dir is not None else config.input_dir)
+    names = [BOM_FILE, ROUTING_FILE, SUPPLIER_PCF_FILE, SUPPLIERS_FILE, TRANSPORT_FILE]
+    files = {name: folder / name for name in names if (folder / name).is_file()}
+    return bundle_from_files(config, files)
+
+
+def bundle_from_files(config: ProductConfig, files: Mapping[str, Path | bytes]) -> InputBundle:
+    """Read and validate an input set given as paths or uploaded bytes, keyed by standard name."""
     bundle = InputBundle()
 
     def read(source: str, filename: str, reader) -> list:
-        path = folder / filename
-        if not path.is_file():
+        file = files.get(filename)
+        if file is None:
             bundle.issues.append(
                 Issue(
                     severity=Severity.ERROR,
                     code="file_missing",
                     source=source,
-                    message=f"{filename} was not found in {folder}.",
+                    message=f"{filename} was not provided.",
                 )
             )
             return []
-        records, issues = reader(path)
+        records, issues = reader(file)
         bundle.issues.extend(issues)
         return records
 
-    bundle.bom = read("bom", BOM_FILE, lambda path: read_bom(path, config))
-    bundle.routing = read("routing", ROUTING_FILE, lambda path: read_routing(path, config))
+    bundle.bom = read("bom", BOM_FILE, lambda file: read_bom(file, config))
+    bundle.routing = read("routing", ROUTING_FILE, lambda file: read_routing(file, config))
     bundle.supplier_pcfs = read(
-        "supplier_pcf", SUPPLIER_PCF_FILE, lambda path: read_supplier_pcfs(path, config)
+        "supplier_pcf", SUPPLIER_PCF_FILE, lambda file: read_supplier_pcfs(file, config)
     )
     bundle.suppliers = read("suppliers", SUPPLIERS_FILE, read_suppliers)
     bundle.transport = read("transport", TRANSPORT_FILE, read_transport)
