@@ -1,0 +1,29 @@
+Subject: Product carbon footprint data request
+
+Dear {{ supplier.contact_role }} at {{ supplier.name }},
+
+We calculate the carbon footprint of a product that uses the materials below, which we buy from you.
+Could you share the cradle-to-gate product carbon footprint (PCF) for each one?
+
+| Material number | Description |
+|---|---|
+{% for record in records -%}
+| {{ record.material_number }} | {{ record.material_description }} |
+{% endfor %}
+What we need for each material:
+
+- **PCF value** in kg CO2e per {{ rules.declared_unit }}, excluding biogenic CO2 uptake
+- **Reference period:** {{ period_start }} to {{ period_end }}. Data with a period that ended more than {{ max_age }} years earlier cannot be used.
+- **Method:** {{ rules.requested_method }}
+- **Boundary:** {{ rules.boundary }}
+- **Primary data share:** as a number from 0 to 1. Without it, your data counts as 0% primary.
+- **Data quality rating:** from 1 (best) to 5 (worst). Without it, your data takes the worst score.
+
+Please fill in the attached template (JSON or CSV). If you use a different format, or can only share
+part of this, please send what you have and we will work with it.
+
+Your data is used only for this calculation. Thank you for your help.
+
+Kind regards,
+
+[Your name]

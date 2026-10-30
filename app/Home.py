@@ -2,10 +2,12 @@
 
 import streamlit as st
 from components import (
+    HOTSPOTS_PAGE,
     MATCH_PAGE,
     PRIMARY_PAGE,
     RESULTS_PAGE,
     START_PAGE,
+    SUPPLIER_PAGE,
     UPLOAD_PAGE,
     sidebar_progress,
 )
@@ -19,6 +21,8 @@ page = st.navigation(
         st.Page(UPLOAD_PAGE, title="Upload & validate"),
         st.Page(MATCH_PAGE, title="Match & review"),
         st.Page(RESULTS_PAGE, title="Results"),
+        st.Page(HOTSPOTS_PAGE, title="Hotspots & priorities"),
+        st.Page(SUPPLIER_PAGE, title="Supplier requests"),
         st.Page(PRIMARY_PAGE, title="Primary data"),
     ]
 )

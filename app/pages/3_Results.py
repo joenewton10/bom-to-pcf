@@ -1,8 +1,7 @@
 """Headline footprint, breakdowns and everything needed to judge how far to trust it."""
 
-import plotly.express as px
 import streamlit as st
-from components import disclaimer, no_data_prompt
+from components import contribution_chart, disclaimer, no_data_prompt
 from state import get_result
 
 from bom_to_pcf.outputs.tables import lines_table, material_table, stage_table
@@ -11,32 +10,6 @@ SHARE_FORMAT = {
     "kg CO2e per kg": st.column_config.NumberColumn(format="%.3f"),
     "Share": st.column_config.NumberColumn(format="percent"),
 }
-MIN_CHART_HEIGHT = 220
-ROW_HEIGHT = 44
-
-
-def contribution_chart(table, label: str) -> None:
-    """One colour, sorted bars, direct labels; the table beneath carries the same values."""
-    figure = px.bar(
-        table,
-        x="kg CO2e per kg",
-        y=label,
-        orientation="h",
-        text=table["Share"].map("{:.0%}".format),
-        color_discrete_sequence=[st.get_option("theme.primaryColor")],
-        hover_data={"Share": ":.1%", "kg CO2e per kg": ":.3f"},
-    )
-    figure.update_traces(textposition="outside", cliponaxis=False, width=0.5)
-    figure.update_layout(
-        yaxis={"categoryorder": "total ascending", "title": None},
-        xaxis={"title": "kg CO₂e per kg of product", "showgrid": False, "zeroline": True},
-        margin={"l": 0, "r": 40, "t": 8, "b": 0},
-        height=max(MIN_CHART_HEIGHT, ROW_HEIGHT * len(table) + 80),
-        showlegend=False,
-    )
-    st.plotly_chart(figure, width="stretch")
-
-
 st.title("Results")
 disclaimer()
 

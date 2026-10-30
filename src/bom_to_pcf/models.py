@@ -76,6 +76,7 @@ class ProductConfig(BaseModel):
     mappings_file: str = "data/mappings/bom_to_dataset.csv"
     candidates_file: str = "data/mappings/candidates.yaml"
     matching_file: str = "config/matching.yaml"
+    engagement_file: str = "config/supplier_engagement.yaml"
     materials: dict[str, MaterialProperties]
     validation: ValidationRules
 
@@ -386,6 +387,62 @@ class PcfResult(BaseModel):
     mass_balance: MassBalance
 
 
+class PriorityRules(BaseModel):
+    contribution_weight: float = Field(ge=0)
+    quality_weight: float = Field(ge=0)
+    dqr_best: int
+    dqr_worst: int
+    recommend_top: int = Field(gt=0)
+
+
+class RequestRules(BaseModel):
+    requested_method: str
+    declared_unit: str
+    boundary: str
+
+
+class EngagementConfig(BaseModel):
+    """How suppliers are ranked and what they are asked for, loaded from YAML."""
+
+    priority: PriorityRules
+    requests: RequestRules
+
+    @classmethod
+    def from_yaml(cls, path: str | Path) -> "EngagementConfig":
+        return cls.model_validate(yaml.safe_load(Path(path).read_text(encoding="utf-8")))
+
+
+class PriorityRow(BaseModel):
+    """One material in the supplier priority ranking."""
+
+    material_number: str
+    description: str
+    supplier_id: str | None
+    supplier_name: str | None
+    contribution: float
+    data_type: str
+    dqr: float
+    gap: float
+    score: float
+    impact_on_weak_data: float
+
+
+class StatusChange(BaseModel):
+    status: str
+    on: date
+    note: str = ""
+
+
+class RequestStatus(BaseModel):
+    """Where a material's supplier data request stands."""
+
+    material_number: str
+    supplier_id: str
+    status: str = "not requested"
+    note: str = ""
+    history: list[StatusChange] = []
+
+
 class AuditEntry(BaseModel):
     """One logged change. The audit trail is only ever added to."""
 
@@ -427,3 +484,4 @@ class ProjectState(BaseModel):
     audit: list[AuditEntry] = []
     review_items: list[ReviewItem] = []
     review_log: list[ReviewLogEntry] = []
+    requests: dict[str, RequestStatus] = {}

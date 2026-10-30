@@ -15,6 +15,7 @@ from state import (
     get_method,
     get_project,
     get_result,
+    note_revert,
     save_project,
     set_project,
     start_fresh,
@@ -218,6 +219,7 @@ else:
         before = result
         try:
             revert(project, undo_material, target, user, undo_reason)
+            note_revert(undo_material)
             save_project()
         except ValueError as error:
             st.error(f"Nothing was changed: {error}.")

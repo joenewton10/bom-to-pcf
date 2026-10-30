@@ -3,6 +3,27 @@
 The footprint starts on database values and improves as supplier data arrives. Every change is
 checked, can be traced and can be undone.
 
+## Which supplier to ask first
+
+Each material gets a priority score = contribution to the PCF × data quality gap, where the gap is
+(DQR − 1) / 4, so 0 at the best score and 1 at the worst. A material with several factors uses their
+impact-weighted DQR. Site energy and transport are not ranked, because no supplier can improve them
+through this workflow. Weights are in `config/supplier_engagement.yaml`.
+
+"Uncertainty reduced" is impact × gap: the footprint resting on weak data. It is an indicator for
+ranking, not a statistical result. Real supplier data could also raise a material's footprint.
+
+## Requests and status
+
+A request is a cover message plus a template in JSON and CSV, ready to load on the Primary data page
+once filled in. The field names are this tool's own, not the official PACT data format. The app never
+sends anything, so a request only counts as requested when you mark it.
+
+Status runs: not requested → requested → received → validated or rejected. It moves by itself when
+data is submitted. A rejected update stays validated while an earlier version is in use, and undoing
+back to the database value returns it to received. Data from a supplier the BOM does not name does not
+move the status.
+
 ## Checks before a supplier PCF is used
 
 | Check | If it fails |

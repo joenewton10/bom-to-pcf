@@ -1,0 +1,40 @@
+# Hand-checked priority ranking. All numbers are round test values, not emission data.
+#
+# Total PCF 4.5 = A 1.5 + B 1.0 + C 0.5 + E 0.5 + site energy 1.0 (energy is not ranked).
+#
+# DQR is the mean of technology, geography and time. Gap = (DQR - 1) / 4.
+#   A: (4 + 5 + 3) / 3 = 4.0                         gap 0.75
+#   B: (3 + 3 + 3) / 3 = 3.0                         gap 0.50
+#   C: two factors, 0.3 at DQR 5 and 0.2 at DQR 3:
+#      (0.3 x 5 + 0.2 x 3) / 0.5 = 4.2               gap 0.80
+#   E: supplier data at DQR 1                        gap 0.00
+#
+# Score = contribution x gap:
+#   A: 1.5 / 4.5 x 0.75 = 0.2500
+#   B: 1.0 / 4.5 x 0.50 = 0.1111
+#   C: 0.5 / 4.5 x 0.80 = 0.0889
+#   E: 0.5 / 4.5 x 0.00 = 0
+#
+# Impact on weak data = impact x gap: A 1.125, B 0.5, C 0.4, E 0.
+total: 4.5
+lines:
+  - { item: A, description: Material A, stage: materials, impact: 1.5, factor: FA }
+  - { item: B, description: Material B, stage: packaging, impact: 1.0, factor: FB }
+  - { item: C, description: Material C, stage: materials, impact: 0.3, factor: FC1 }
+  - { item: C, description: Material C, stage: materials, impact: 0.2, factor: FC2 }
+  - { item: E, description: Material E, stage: materials, impact: 0.5, factor: FE }
+  - { item: S1, description: Electricity, stage: converting_energy, impact: 1.0, factor: FEL }
+factors:
+  - { id: FA, type: secondary, dqr: [4, 5, 3] }
+  - { id: FB, type: secondary, dqr: [3, 3, 3] }
+  - { id: FC1, type: secondary, dqr: [5, 5, 5] }
+  - { id: FC2, type: secondary, dqr: [3, 3, 3] }
+  - { id: FE, type: primary, dqr: [1, 1, 1] }
+  - { id: FEL, type: secondary, dqr: [3, 1, 1] }
+expected:
+  order: [A, B, C, E]
+  scores: { A: 0.25, B: 0.111111, C: 0.088889, E: 0.0 }
+  dqr: { A: 4.0, B: 3.0, C: 4.2, E: 1.0 }
+  weak: { A: 1.125, B: 0.5, C: 0.4, E: 0.0 }
+  contribution: { A: 0.333333, B: 0.222222, C: 0.111111, E: 0.111111 }
+  data_type: { A: secondary, B: secondary, C: secondary, E: primary }

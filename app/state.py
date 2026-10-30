@@ -2,11 +2,13 @@
 
 import os
 from collections.abc import Mapping as MappingType
+from datetime import date
 from pathlib import Path
 
 import streamlit as st
 
 from bom_to_pcf.engine.python_engine import run_with_config
+from bom_to_pcf.inventory.lci_builder import supplier_factor
 from bom_to_pcf.io.factor_store import load_factors
 from bom_to_pcf.io.inputs import InputBundle, bundle_from_files, load_inputs
 from bom_to_pcf.matching.fuzzy_matcher import load_candidates
@@ -14,10 +16,13 @@ from bom_to_pcf.matching.review import build_review, mappings_from_review, revie
 from bom_to_pcf.models import (
     Candidate,
     EmissionFactor,
+    EngagementConfig,
     Mapping,
     MatchingConfig,
     MethodConfig,
     PcfResult,
+    PriorityRow,
+    PriorityRules,
     ProductConfig,
     ProjectState,
     ReviewItem,
@@ -34,6 +39,8 @@ from bom_to_pcf.primary_data.validation import check_submission, secondary_per_k
 from bom_to_pcf.storage.base import SQLITE, STORAGE_VARIABLE, StorageBackend, choose_backend
 from bom_to_pcf.storage.session_store import SessionStore
 from bom_to_pcf.storage.sqlite_store import SQLiteStore
+from bom_to_pcf.suppliers.priority import rank_materials
+from bom_to_pcf.suppliers.requests import on_revert, on_submission
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCT_CONFIG = ROOT / "config" / "product_pet_diecut.yaml"
@@ -83,6 +90,31 @@ def get_matching_config() -> MatchingConfig:
     return MatchingConfig.from_yaml(ROOT / get_config().matching_file)
 
 
+def get_engagement() -> EngagementConfig:
+    return EngagementConfig.from_yaml(ROOT / get_config().engagement_file)
+
+
+def templates_dir() -> Path:
+    return ROOT / "templates"
+
+
+def get_priorities() -> tuple[list[PriorityRow], PriorityRules]:
+    """The supplier ranking for the current result, with the rules that produced it."""
+    bundle = get_bundle()
+    result = get_result()
+    effective = apply_primary(bundle, get_project())
+    known = {factor.factor_id: factor for factor in get_factors()}
+    known |= {
+        factor.factor_id: factor
+        for factor in (supplier_factor(pcf) for pcf in effective.supplier_pcfs)
+    }
+    rules = get_engagement().priority
+    rows = rank_materials(
+        result.lines, result.kg_co2e_per_kg, known, bundle.bom, bundle.suppliers, rules
+    )
+    return rows, rules
+
+
 def get_candidates() -> list[Candidate]:
     return load_candidates(ROOT / get_config().candidates_file)
 
@@ -121,6 +153,10 @@ def start_fresh() -> None:
     get_store().start_fresh()
     for key in (PROJECT, BUNDLE, DATA_SOURCE, PROGRESS, LAST_BEFORE):
         st.session_state.pop(key, None)
+
+
+def note_revert(material: str) -> None:
+    on_revert(get_project(), material, date.today())
 
 
 def set_project(state: ProjectState) -> None:
@@ -162,7 +198,9 @@ def submit_pcf(pcf: SupplierPcf, user: str, comment: str = ""):
     check = check_submission(
         pcf, config, get_method().primary_data, get_bundle().bom, secondary, comment
     )
-    record_submission(get_project(), pcf, check, user, comment)
+    project = get_project()
+    record_submission(project, pcf, check, user, comment)
+    on_submission(project, pcf, check.accepted, get_bundle().bom, date.today())
     save_project()
     return check
 

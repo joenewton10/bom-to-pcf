@@ -1,5 +1,12 @@
 # Changelog
 
+## Phase 8 — Hotspots, priority ranking & supplier requests
+
+- Supplier priority ranking with plain-language recommendations, checked against a hand-worked fixture.
+- Data requests per supplier: cover message plus JSON and CSV templates, individually or as a ZIP.
+- Status tracker that moves to received, validated or rejected by itself when data is submitted.
+- Coverage metric: share of the PCF on validated supplier data.
+
 ## Start here wording
 
 - With the owner's approval, "It follows ISO 14067 and the TfS PCF Guideline" became "It's based on ISO 14067 and the TfS PCF Guideline, with known gaps documented", because `docs/data_gaps.md` lists differences that remain.

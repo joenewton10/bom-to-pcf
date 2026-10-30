@@ -1,0 +1,12 @@
+# How suppliers are ranked and what they are asked for.
+priority:
+  contribution_weight: 1.0 # score = contribution ^ this x data quality gap ^ quality_weight
+  quality_weight: 1.0
+  dqr_best: 1
+  dqr_worst: 5
+  recommend_top: 3
+
+requests:
+  requested_method: ISO 14067, following the TfS PCF Guideline 3.0 or PACT Methodology 3.0
+  declared_unit: kg
+  boundary: cradle-to-gate

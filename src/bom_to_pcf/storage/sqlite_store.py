@@ -10,7 +10,7 @@ from bom_to_pcf.models import ProjectState
 from bom_to_pcf.storage.base import StorageBackend
 
 HISTORY_TABLES = ("audit", "versions", "rejections", "review_log")
-CURRENT_FIELDS = ("active", "review_items")
+CURRENT_FIELDS = ("active", "review_items", "requests")
 
 
 class SQLiteStore(StorageBackend):
