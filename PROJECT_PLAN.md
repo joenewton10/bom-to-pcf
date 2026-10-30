@@ -423,8 +423,8 @@ Use this text exactly. Layout notes are in *italics* and are instructions, not t
 
 I built this tool to show how a product carbon footprint can be calculated automatically
 from the data a manufacturer already has: a bill of materials, production steps and energy
-use. It follows ISO 14067 and the TfS PCF Guideline, and it's designed to get better over
-time. You start with database values, and as suppliers send their real data, the footprint
+use. It's based on ISO 14067 and the TfS PCF Guideline, with known gaps documented, and
+it's designed to get better over time. You start with database values, and as suppliers send their real data, the footprint
 becomes more accurate and more trustworthy.
 
 The example is a die-cut PET film part, based on the kind of precision converting work I

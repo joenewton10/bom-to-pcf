@@ -1,5 +1,9 @@
 # Changelog
 
+## Start here wording
+
+- With the owner's approval, "It follows ISO 14067 and the TfS PCF Guideline" became "It's based on ISO 14067 and the TfS PCF Guideline, with known gaps documented", because `docs/data_gaps.md` lists differences that remain.
+
 ## Method checked against PACT 3.0 and TfS 3.0
 
 - Primary data share: an input is primary only if its activity data and emission factor both are. Site quantities multiplied by database factors now count as 0%.
