@@ -1,10 +1,10 @@
 # bom-to-pcf
 
-Calculate a cradle-to-gate product carbon footprint (PCF) from the data a manufacturer already has: a
-bill of materials, production steps and energy use. Then improve it as suppliers send real data.
+This tool calculates a cradle-to-gate product carbon footprint (PCF) from a bill of materials, production
+steps and energy use, then updates it as suppliers send real data.
 
-> **All data here is representative and results are illustrative.** This is not a verified PCF and should
-> not be used for real claims. No real company's data is used, and supplier names are fictional.
+> Everything here is illustrative. The data is representative, the supplier names are fictional, and no real
+> company's data is used. This is not a verified PCF, so please don't use it for real claims.
 
 **Live app:** link to be added after deployment
 
@@ -12,23 +12,23 @@ bill of materials, production steps and energy use. Then improve it as suppliers
 
 ## The problem
 
-Customers increasingly ask for product carbon footprints, but the inputs sit in different places: BOM
-exports, machine data and supplier emails. Doing this by hand is slow, hard to repeat and hard to audit. It
-also hides how much of the result rests on generic database values.
+Customers keep asking for product carbon footprints, and the inputs are scattered across BOM exports, machine
+data and supplier emails. Done by hand, the work is slow and hard to repeat. It's also easy to lose track of how
+much of the answer is just a generic database value.
 
 ## The approach
 
-1. **Upload and validate.** Clean a SAP-style BOM export, handling German decimals, mixed units, duplicates
-   and missing suppliers, and check the mass balance.
-2. **Match and review.** Text matching, optionally with AI, proposes an emission factor for each material. A
-   person decides, every decision is logged, and a final result needs a decision on every material.
-3. **Calculate.** Get the PCF per kg and per 1,000 parts, with primary data share and data quality rating.
-   Every line traces to a factor and a source.
-4. **Find hotspots.** Rank suppliers by their contribution to the footprint and how weak the data is.
-5. **Request and add supplier data.** Create data requests, track them, and check incoming PCFs before they
-   replace database values. Every change is logged and can be undone.
-6. **Explore and export.** Run scenarios, sensitivity, Monte Carlo and a 36-variant product family. Check
-   environmental claims, then export PACT JSON, a data sheet and a methods report.
+1. Clean a SAP-style BOM export (German decimals, mixed units, duplicates, missing suppliers) and check the
+   mass balance.
+2. Suggest an emission factor for each material using text matching and, optionally, AI. A person decides each
+   one, and the result stays a draft until they have.
+3. Calculate the PCF per kg and per 1,000 parts, with primary data share and data quality rating. You can trace
+   any line back to its factor and source.
+4. Rank suppliers by how much they contribute and how weak their data is.
+5. Create data requests, then check incoming supplier PCFs before they replace database values. Every change
+   is logged and can be undone.
+6. Try scenarios, sensitivity, Monte Carlo and a 36-variant product family, check environmental claims, and
+   export PACT JSON, a data sheet and a methods report.
 
 ## Architecture
 
@@ -67,7 +67,8 @@ flowchart LR
     CLI --> Engine
 ```
 
-All calculation lives in `src/`. The app's pages only call it. Parameters are in YAML, and factors are in CSV.
+The calculations are all in `src/`, and the app's pages only call them. Parameters are in YAML and factors are
+in CSV.
 
 ## Screenshots
 
@@ -96,16 +97,19 @@ All calculation lives in `src/`. The app's pages only call it. Parameters are in
 
 ## Limitations
 
-- **Illustrative data.** Quantities are mock values. Two factors are proxies I calculated, and others are
-  weak fits such as US resin data. See [data_gaps.md](docs/data_gaps.md).
-- **The demo starts as a draft with 0% primary data.** That is the correct result under PACT and TfS, because
-  every emission factor is from a database. Supplier data raises the share.
-- **Mixed GWP basis.** Sources do not share one IPCC report, and values are used as published.
-- **Assumed uncertainty.** The Monte Carlo spreads are assumptions based on quality scores, not published values.
-- **One supplier per material.** Dual sourcing is not modelled.
-- **Out of scope:** real company data, third-party verification, certified EPD or PCF claims, a full ISO 14044
-  critical review, sending email to suppliers, user accounts, multiple languages, product-specific ESPR
-  requirements and legal advice.
+The data is mock, and some factors are poor fits. Two are proxies I calculated, and the PET resin figure is
+from the US. [data_gaps.md](docs/data_gaps.md) has the full list.
+
+The demo starts as a draft with 0% primary data. That's correct under PACT and TfS, because every emission
+factor comes from a database. Supplier data raises it.
+
+The sources don't share one IPCC report, so values are used as published. The Monte Carlo spreads are my own
+assumptions based on quality scores, not published values. Each material can only have one supplier value, so
+dual sourcing isn't modelled.
+
+This project doesn't cover real company data, third-party verification, certified EPD or PCF claims, a full ISO
+14044 critical review, emailing suppliers, user accounts, other languages, product-specific ESPR requirements
+or legal advice.
 
 ## How to run
 
