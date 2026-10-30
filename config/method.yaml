@@ -1,0 +1,7 @@
+# Method choices. Extended in Phase 4.
+gwp_set: IPCC AR6 GWP100
+
+# PACT Technical Specification 3.0.3 requires DQR values from 1 to 5; 1 is the best score.
+dqr_scale:
+  best: 1
+  worst: 5

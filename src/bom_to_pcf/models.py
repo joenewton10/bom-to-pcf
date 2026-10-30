@@ -3,6 +3,7 @@
 from datetime import date
 from enum import StrEnum
 from pathlib import Path
+from typing import Literal
 
 import pandas as pd
 import yaml
@@ -144,6 +145,29 @@ class SupplierPcf(BaseModel):
     @property
     def usable(self) -> bool:
         return self.fallback_reason is None
+
+
+class EmissionFactor(BaseModel):
+    """One row of the factor table. DQR scores run from 1 (best) to 5 (worst)."""
+
+    factor_id: str = Field(min_length=1)
+    name: str
+    value: float | None = Field(default=None, ge=0)
+    unit: str
+    gwp_basis: str = ""
+    geography: str = ""
+    reference_year: int | None = None
+    source_id: str = ""
+    data_type: Literal["secondary", "primary"]
+    dqr_tech: float | None = Field(default=None, ge=1, le=5)
+    dqr_geo: float | None = Field(default=None, ge=1, le=5)
+    dqr_time: float | None = Field(default=None, ge=1, le=5)
+    notes: str = ""
+    status: str
+
+    @property
+    def is_placeholder(self) -> bool:
+        return self.status == "PLACEHOLDER"
 
 
 class TransportLeg(BaseModel):

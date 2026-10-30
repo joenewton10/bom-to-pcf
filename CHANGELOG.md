@@ -1,5 +1,12 @@
 # Changelog
 
+## Phase 3 — Emission factors & sources
+
+- `emission_factors.csv` with 13 sourced factors and 2 placeholders; `SOURCES.md` says where each
+  value was read.
+- `io/factor_store.py` rejects any non-placeholder factor without a value and a listed source.
+- `docs/data_gaps.md` lists placeholders, weak factors and the mixed GWP basis.
+
 ## Phase 2 — Data models & input readers
 
 - Owner decision: PET die-cut part only; no second product for now.
