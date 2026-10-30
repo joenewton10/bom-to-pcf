@@ -8,6 +8,7 @@ START_PAGE = "pages/0_Start_here.py"
 UPLOAD_PAGE = "pages/1_Upload_and_validate.py"
 MATCH_PAGE = "pages/2_Match_and_review.py"
 RESULTS_PAGE = "pages/3_Results.py"
+PRIMARY_PAGE = "pages/6_Primary_data.py"
 
 
 def sidebar_progress() -> None:

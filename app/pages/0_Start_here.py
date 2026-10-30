@@ -1,13 +1,13 @@
 """Landing page. All wording is the owner's, from PROJECT_PLAN.md section 10. Do not edit it."""
 
 import streamlit as st
-from components import MATCH_PAGE, RESULTS_PAGE, UPLOAD_PAGE
+from components import MATCH_PAGE, PRIMARY_PAGE, RESULTS_PAGE, UPLOAD_PAGE
 from state import load_demo
 
 METHODOLOGY_URL = "https://github.com/joenewton10/bom-to-pcf/blob/main/docs/methodology.md"
 GITHUB_URL = "https://github.com/joenewton10/bom-to-pcf"
 PORTFOLIO_URL = "https://joenewton10.github.io"
-BUILT_PAGES = {1: UPLOAD_PAGE, 2: MATCH_PAGE, 3: RESULTS_PAGE}
+BUILT_PAGES = {1: UPLOAD_PAGE, 2: MATCH_PAGE, 3: RESULTS_PAGE, 6: PRIMARY_PAGE}
 
 FLOW = """
 digraph {

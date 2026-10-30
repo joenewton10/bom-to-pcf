@@ -41,7 +41,7 @@ def supplier_factor(pcf: SupplierPcf) -> EmissionFactor:
         name=f"Supplier PCF from {pcf.supplier_id}",
         value=pcf.pcf_value,
         unit=f"kg CO2e/{pcf.declared_unit}",
-        source_id=f"supplier_pcf:{pcf.supplier_id}",
+        source_id=f"supplier_pcf:{pcf.version_id or pcf.supplier_id}",
         data_type="primary",
         dqr_tech=pcf.dqr,
         dqr_geo=pcf.dqr,

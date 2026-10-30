@@ -74,6 +74,11 @@ method:
     transport: { road: [ROAD, ROAD_WTT] }
     scrap: { incineration: [BURN] }
   primary_share: { site_stages: [converting_energy, site_overhead, scrap_treatment] }
+  primary_data:
+    plausibility_low: 0.2
+    plausibility_high: 5.0
+    allowed_boundaries: [cradle-to-gate]
+    example_ratio: 0.8
 expected:
   kg_co2e_per_kg: 2.74
   kg_co2e_per_1000_pieces: 5.48

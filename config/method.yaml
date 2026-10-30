@@ -41,3 +41,10 @@ known_omissions:
   - Making the PE bag from LDPE resin
   - PET film stretching and heat-setting (film making is a proxy from extrusion electricity)
   - Coating the release liner (the liner is a proxy from paper and silicone)
+
+# Checks on supplier PCFs before they replace a database value.
+primary_data:
+  plausibility_low: 0.2 # times the secondary value; outside this range a comment is mandatory
+  plausibility_high: 5.0
+  allowed_boundaries: [cradle-to-gate]
+  example_ratio: 0.8 # the page's test example, as a share of the secondary value

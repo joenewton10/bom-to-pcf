@@ -20,6 +20,7 @@ TRANSPORT_COLUMNS = [
 ]
 PCF_REQUIRED_FIELDS = ["pcf_value", "declared_unit", "reference_period_end", "method", "boundary"]
 LIST_SEPARATOR = "|"
+NUMERIC_SUBMISSION_FIELDS = ["pcf_value", "primary_data_share", "dqr"]
 
 
 def read_suppliers(source: Path | str | bytes) -> tuple[list[Supplier], list[Issue]]:
@@ -106,6 +107,25 @@ def _fallback_reason(pcf: SupplierPcf, config: ProductConfig) -> tuple[str | Non
     if absent:
         return f"the record is incomplete (missing {', '.join(absent)})", "supplier_pcf_incomplete"
     return None, ""
+
+
+def read_submission_file(raw: bytes, filename: str) -> list[SupplierPcf]:
+    """Read supplier PCFs from an uploaded JSON or CSV file. Raises ValueError if unreadable."""
+    try:
+        if filename.lower().endswith(".json"):
+            payload = json.loads(decode(raw))
+            records = payload["records"] if isinstance(payload, dict) else payload
+        else:
+            records = []
+            for _, row in read_rows(raw):
+                record = {key: value or None for key, value in row.items()}
+                for name in NUMERIC_SUBMISSION_FIELDS:
+                    if record.get(name):
+                        record[name] = parse_decimal(record[name])[0]
+                records.append(record)
+        return [SupplierPcf.model_validate(record) for record in records]
+    except (ValueError, KeyError, TypeError, ValidationError) as error:
+        raise ValueError(f"{filename} could not be read as supplier PCFs") from error
 
 
 def read_transport(source: Path | str | bytes) -> tuple[list[TransportLeg], list[Issue]]:

@@ -13,6 +13,7 @@ from state import (
     get_result,
     get_review,
     get_review_log,
+    save_project,
 )
 
 from bom_to_pcf.matching.llm_matcher import API_KEY_VARIABLE, make_client, rank_with_llm
@@ -97,6 +98,7 @@ else:
                 else:
                     add_llm_suggestion(item, suggestion)
             st.session_state[REVIEW_VERSION] += 1
+            save_project()
             if failed:
                 st.warning(f"{failed} AI requests failed, so text matches stay for those.")
 
@@ -122,6 +124,7 @@ edited = st.data_editor(
 if st.button("Save decisions", type="primary"):
     try:
         apply_review_table(items, edited, candidates, reviewer, get_review_log())
+        save_project()
     except ValueError as error:
         st.error(f"Nothing was saved: {error}.")
     else:

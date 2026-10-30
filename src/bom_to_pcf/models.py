@@ -153,6 +153,7 @@ class SupplierPcf(BaseModel):
     notes: str | None = None
     status: str | None = None
     fallback_reason: str | None = None
+    version_id: str | None = None
 
     @property
     def usable(self) -> bool:
@@ -290,6 +291,13 @@ class PrimaryShareRules(BaseModel):
     site_stages: list[str]
 
 
+class PrimaryDataRules(BaseModel):
+    plausibility_low: float = Field(gt=0)
+    plausibility_high: float = Field(gt=0)
+    allowed_boundaries: list[str]
+    example_ratio: float = Field(gt=0)
+
+
 class MethodConfig(BaseModel):
     """Method choices loaded from YAML."""
 
@@ -299,6 +307,7 @@ class MethodConfig(BaseModel):
     cut_off: CutOffRules
     factors: FactorChoices
     primary_share: PrimaryShareRules
+    primary_data: PrimaryDataRules
     known_omissions: list[str] = []
 
     @classmethod
@@ -377,3 +386,46 @@ class PcfResult(BaseModel):
     primary_data_share: float
     dqr: DqrScore
     mass_balance: MassBalance
+
+
+class AuditEntry(BaseModel):
+    """One logged change. The audit trail is only ever added to."""
+
+    timestamp: str
+    user: str
+    material: str
+    supplier: str
+    field: str
+    old_value: str
+    new_value: str
+    reason: str
+    version_id: str
+
+
+class PrimaryVersion(BaseModel):
+    """An accepted supplier PCF. Versions are kept for good, even after being replaced."""
+
+    version_id: str
+    created_at: str
+    user: str
+    submission: SupplierPcf
+    value_per_kg: float
+    comment: str = ""
+
+
+class RejectedSubmission(BaseModel):
+    timestamp: str
+    user: str
+    submission: SupplierPcf
+    reasons: list[str]
+
+
+class ProjectState(BaseModel):
+    """Everything a user's work adds to the inputs, saved and restored as one."""
+
+    versions: list[PrimaryVersion] = []
+    active: dict[str, str] = {}
+    rejections: list[RejectedSubmission] = []
+    audit: list[AuditEntry] = []
+    review_items: list[ReviewItem] = []
+    review_log: list[ReviewLogEntry] = []

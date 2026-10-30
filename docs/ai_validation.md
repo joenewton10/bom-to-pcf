@@ -38,8 +38,8 @@ Every decision is added to the log and earlier entries are never changed:
 `timestamp, bom_item, suggestion, source, confidence, decision, chosen, reviewer, comment`.
 
 `chosen` is an addition to the planned fields, recording the reviewer's own pick. The reviewer name is
-typed in and not verified, because the app has no logins. The log lasts for the session and can be
-downloaded. Lasting storage arrives with the primary data workflow.
+typed in and not verified, because the app has no logins. The log can be downloaded, and it is saved
+with the rest of your progress (see [primary_data_workflow.md](primary_data_workflow.md)).
 
 ## If the AI fails
 

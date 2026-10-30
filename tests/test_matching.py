@@ -312,7 +312,7 @@ def test_review_page_prompts_without_data() -> None:
 def test_results_stop_being_draft_after_review_in_the_app() -> None:
     at = try_demo(AppTest.from_file(HOME, default_timeout=TIMEOUT).run())
     assert any("DRAFT" in w.value for w in at.warning)
-    for item in at.session_state["review_items"]:
+    for item in at.session_state["project_state"].review_items:
         record_decision(item, APPROVE, "A", [])
     at.run()
     assert not at.exception

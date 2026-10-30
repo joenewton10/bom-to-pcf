@@ -1,5 +1,13 @@
 # Changelog
 
+## Phase 7 — Primary data, storage & audit
+
+- Supplier PCFs by form or file, checked against unit, age, method, boundary and plausibility rules.
+- Accepted data replaces the database value with a new version; undo returns to any earlier version exactly.
+- Before-and-after comparison, append-only audit trail and rejected submissions with reasons.
+- SQLite locally and session storage when hosted, chosen from the visited address; progress file to save and restore.
+- Review decisions and the review log now persist too. `docs/primary_data_workflow.md`.
+
 ## Start here wording
 
 - With the owner's approval, "Nothing is used until a person approves it" became "Nothing counts in a final result until a person approves it", because drafts use unreviewed matches provisionally.
