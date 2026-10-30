@@ -1,5 +1,9 @@
 # Changelog
 
+## Start here wording
+
+- With the owner's approval, "Nothing is used until a person approves it" became "Nothing counts in a final result until a person approves it", because drafts use unreviewed matches provisionally.
+
 ## Phase 6 — Matching & review
 
 - Text matching against `data/mappings/candidates.yaml`, top 3 with scores; a candidate can stand for several factors.

@@ -457,7 +457,7 @@ spots duplicates and checks that the mass balance adds up.
 
 **2. Match & review**
 Each material is matched to an emission factor. Suggestions come from text matching and,
-optionally, AI. Nothing is used until a person approves it.
+optionally, AI. Nothing counts in a final result until a person approves it.
 *In:* material descriptions · *Out:* approved matches with an audit log
 
 **3. Results**
