@@ -6,6 +6,7 @@ from components import (
     MATCH_PAGE,
     PRIMARY_PAGE,
     RESULTS_PAGE,
+    SCENARIOS_PAGE,
     SUPPLIER_PAGE,
     UPLOAD_PAGE,
 )
@@ -21,6 +22,7 @@ BUILT_PAGES = {
     4: HOTSPOTS_PAGE,
     5: SUPPLIER_PAGE,
     6: PRIMARY_PAGE,
+    7: SCENARIOS_PAGE,
 }
 
 FLOW = """

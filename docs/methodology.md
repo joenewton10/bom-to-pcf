@@ -82,6 +82,27 @@ PACT asks for 100-year GWP from the latest IPCC Assessment Report (3.3.1). The t
 sources do not share one basis, and values are used as published. See [data_gaps.md](data_gaps.md).
 Biogenic carbon is left out of the headline where the source separates it.
 
+## Scenarios and sensitivity
+
+Scenarios and sliders use one set of levers in `config/scenarios/`: renewable share of electricity,
+recycled share of PET resin, and a scrap multiplier. More scrap also raises product material by the
+same ratio, so the mass still balances. Scenarios never change saved data. A green electricity claim
+would need a contractual instrument under PACT (3.3.2.3).
+
+## Uncertainty
+
+Monte Carlo with 1,000 runs by default and an optional fixed seed, reporting P5, P50 and P95. Each
+factor and inventory quantity gets a lognormal multiplier with a mean of 1. Lines sharing a factor
+share its draw, because an error in a factor affects them together. The spreads are assumptions,
+see [data_gaps.md](data_gaps.md).
+
+## Product family
+
+One parameterised model covers film thickness, adhesive and recycled share. Film mass follows
+thickness, and part mass follows the product material. It assumes the same part area and scrap rates,
+and energy per kg that does not change with thickness. Removing the adhesive also removes the liner.
+Thin film may in reality run differently, so results at the ends of the range are less reliable.
+
 ## When a result is a draft
 
 A result is a draft if it uses placeholder factors, has flows that could not be modelled, has

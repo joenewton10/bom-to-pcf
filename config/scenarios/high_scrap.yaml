@@ -1,0 +1,3 @@
+name: High scrap
+description: Every process scraps 1.5 times as much, so more material is needed per kg of product.
+scrap_multiplier: 1.5

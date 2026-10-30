@@ -14,6 +14,7 @@ from bom_to_pcf.io.inputs import InputBundle, bundle_from_files, load_inputs
 from bom_to_pcf.matching.fuzzy_matcher import load_candidates
 from bom_to_pcf.matching.review import build_review, mappings_from_review, review_complete
 from bom_to_pcf.models import (
+    AnalysisConfig,
     Candidate,
     EmissionFactor,
     EngagementConfig,
@@ -41,11 +42,14 @@ from bom_to_pcf.storage.session_store import SessionStore
 from bom_to_pcf.storage.sqlite_store import SQLiteStore
 from bom_to_pcf.suppliers.priority import rank_materials
 from bom_to_pcf.suppliers.requests import on_revert, on_submission
+from bom_to_pcf.variants import FamilyConfig
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCT_CONFIG = ROOT / "config" / "product_pet_diecut.yaml"
 DEMO_DIR = ROOT / "data" / "demo"
 SQLITE_PATH = ROOT / "data" / "app.db"
+SCENARIOS_DIR = ROOT / "config" / "scenarios"
+FAMILY_CONFIG = ROOT / "config" / "variants_pet_family.yaml"
 
 BUNDLE = "bundle"
 DATA_SOURCE = "data_source"
@@ -94,6 +98,29 @@ def get_engagement() -> EngagementConfig:
     return EngagementConfig.from_yaml(ROOT / get_config().engagement_file)
 
 
+def get_analysis() -> AnalysisConfig:
+    return AnalysisConfig.from_yaml(ROOT / get_config().analysis_file)
+
+
+def get_family() -> FamilyConfig:
+    return FamilyConfig.from_yaml(FAMILY_CONFIG)
+
+
+def get_effective_bundle() -> InputBundle:
+    """The inputs with accepted supplier data applied."""
+    return apply_primary(get_bundle(), get_project())
+
+
+def known_factors() -> dict[str, EmissionFactor]:
+    """Every factor in the current result, including those from supplier data."""
+    known = {factor.factor_id: factor for factor in get_factors()}
+    known |= {
+        factor.factor_id: factor
+        for factor in (supplier_factor(pcf) for pcf in get_effective_bundle().supplier_pcfs)
+    }
+    return known
+
+
 def templates_dir() -> Path:
     return ROOT / "templates"
 
@@ -102,15 +129,9 @@ def get_priorities() -> tuple[list[PriorityRow], PriorityRules]:
     """The supplier ranking for the current result, with the rules that produced it."""
     bundle = get_bundle()
     result = get_result()
-    effective = apply_primary(bundle, get_project())
-    known = {factor.factor_id: factor for factor in get_factors()}
-    known |= {
-        factor.factor_id: factor
-        for factor in (supplier_factor(pcf) for pcf in effective.supplier_pcfs)
-    }
     rules = get_engagement().priority
     rows = rank_materials(
-        result.lines, result.kg_co2e_per_kg, known, bundle.bom, bundle.suppliers, rules
+        result.lines, result.kg_co2e_per_kg, known_factors(), bundle.bom, bundle.suppliers, rules
     )
     return rows, rules
 

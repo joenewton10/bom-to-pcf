@@ -6,6 +6,7 @@ from components import (
     MATCH_PAGE,
     PRIMARY_PAGE,
     RESULTS_PAGE,
+    SCENARIOS_PAGE,
     START_PAGE,
     SUPPLIER_PAGE,
     UPLOAD_PAGE,
@@ -24,6 +25,7 @@ page = st.navigation(
         st.Page(HOTSPOTS_PAGE, title="Hotspots & priorities"),
         st.Page(SUPPLIER_PAGE, title="Supplier requests"),
         st.Page(PRIMARY_PAGE, title="Primary data"),
+        st.Page(SCENARIOS_PAGE, title="Scenarios & variants"),
     ]
 )
 refresh_project()

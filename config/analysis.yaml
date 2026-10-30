@@ -1,0 +1,21 @@
+# Settings for scenarios, sensitivity and uncertainty.
+
+# The factors that scenarios blend between.
+levers:
+  electricity_grid: EL_DE_GRID
+  electricity_renewable: EL_DE_WIND
+  resin_virgin: PET_RESIN_VIRGIN
+  resin_recycled: PET_RESIN_RECYCLED
+
+# AUTHOR'S ASSUMPTIONS, not published values. Sources do not give uncertainty ranges, so a factor's
+# spread is assumed from its mean PACT quality score. See docs/data_gaps.md.
+uncertainty:
+  runs: 1000
+  seed: 42
+  relative_sd_by_dqr: # coefficient of variation at each whole score; values between are interpolated
+    1: 0.05
+    2: 0.10
+    3: 0.20
+    4: 0.30
+    5: 0.50
+  activity_relative_sd: 0.05 # spread of each inventory quantity

@@ -77,6 +77,8 @@ class ProductConfig(BaseModel):
     candidates_file: str = "data/mappings/candidates.yaml"
     matching_file: str = "config/matching.yaml"
     engagement_file: str = "config/supplier_engagement.yaml"
+    analysis_file: str = "config/analysis.yaml"
+    scenarios_dir: str = "config/scenarios"
     materials: dict[str, MaterialProperties]
     validation: ValidationRules
 
@@ -385,6 +387,31 @@ class PcfResult(BaseModel):
     primary_share_unknown: float
     dqr: DqrScore
     mass_balance: MassBalance
+
+
+class ScenarioLevers(BaseModel):
+    electricity_grid: str
+    electricity_renewable: str
+    resin_virgin: str
+    resin_recycled: str
+
+
+class UncertaintyRules(BaseModel):
+    runs: int = Field(gt=0)
+    seed: int
+    relative_sd_by_dqr: dict[int, float]
+    activity_relative_sd: float = Field(ge=0)
+
+
+class AnalysisConfig(BaseModel):
+    """Settings for scenarios and uncertainty, loaded from YAML."""
+
+    levers: ScenarioLevers
+    uncertainty: UncertaintyRules
+
+    @classmethod
+    def from_yaml(cls, path: str | Path) -> "AnalysisConfig":
+        return cls.model_validate(yaml.safe_load(Path(path).read_text(encoding="utf-8")))
 
 
 class PriorityRules(BaseModel):

@@ -1,0 +1,8 @@
+# One parameterised model of the PET part family. Every combination is calculated.
+product: config/product_pet_diecut.yaml
+film_material: "100001"
+# Without adhesive there is nothing for the release liner to protect, so both go.
+adhesive_materials: ["100002", "100003"]
+thickness_um: [25, 50, 75, 125, 188, 250]
+adhesive: [true, false]
+recycled_share: [0.0, 0.3, 1.0]

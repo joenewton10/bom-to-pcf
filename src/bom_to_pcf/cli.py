@@ -4,13 +4,17 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
+import yaml
 from rich.console import Console
 from rich.table import Table
 
 from bom_to_pcf import __version__
 from bom_to_pcf.engine.python_engine import run_with_config
+from bom_to_pcf.io.factor_store import load_factors, read_mappings
 from bom_to_pcf.io.inputs import load_inputs
-from bom_to_pcf.models import ProductConfig, issues_table
+from bom_to_pcf.models import AnalysisConfig, MethodConfig, ProductConfig, issues_table
+from bom_to_pcf.scenarios import Scenario, run_scenario
+from bom_to_pcf.variants import FamilyConfig, family_table, run_family
 
 app = typer.Typer(help="Calculate product carbon footprints from a bill of materials.")
 
@@ -27,10 +31,24 @@ def version() -> None:
 
 
 @app.command()
-def run(product: Annotated[Path, typer.Option(help="Product config YAML.")]) -> None:
+def run(
+    product: Annotated[Path, typer.Option(help="Product config YAML.")],
+    scenario: Annotated[str | None, typer.Option(help="Scenario file name, no extension.")] = None,
+) -> None:
     """Calculate the footprint and print it with its status and data gaps."""
     config = ProductConfig.from_yaml(product)
-    result = run_with_config(config, load_inputs(config))
+    bundle = load_inputs(config)
+    if scenario is None:
+        result = run_with_config(config, bundle)
+    else:
+        chosen = Scenario.model_validate(
+            yaml.safe_load((Path(config.scenarios_dir) / f"{scenario}.yaml").read_text("utf-8"))
+        )
+        method = MethodConfig.from_yaml(config.method_file)
+        factors, _ = load_factors(config.factors_file, config.sources_file)
+        mappings, _ = read_mappings(config.mappings_file)
+        analysis = AnalysisConfig.from_yaml(config.analysis_file)
+        result = run_scenario(bundle, config, method, factors, mappings, chosen, analysis)
     console = Console(width=140)
     console.print(result.status_label, markup=False)
     console.print(f"{result.kg_co2e_per_kg:.3f} kg CO2e per kg", markup=False)
@@ -49,6 +67,19 @@ def run(product: Annotated[Path, typer.Option(help="Product config YAML.")]) -> 
         f"{sorted({x.item for x in result.excluded})}",
         markup=False,
     )
+
+
+@app.command()
+def variants(config: Annotated[Path, typer.Option(help="Product family YAML.")]) -> None:
+    """Calculate every variant in a product family and print the results as CSV."""
+    family = FamilyConfig.from_yaml(config)
+    product = ProductConfig.from_yaml(family.product)
+    method = MethodConfig.from_yaml(product.method_file)
+    factors, _ = load_factors(product.factors_file, product.sources_file)
+    mappings, _ = read_mappings(product.mappings_file)
+    analysis = AnalysisConfig.from_yaml(product.analysis_file)
+    results = run_family(load_inputs(product), product, method, factors, mappings, family, analysis)
+    typer.echo(family_table(results).to_csv(index=False).strip())
 
 
 @app.command("validate-inputs")

@@ -53,6 +53,13 @@ These are listed in `config/method.yaml` and reported with every result.
 - **Packaging:** PACT wants packaging reported separately. It is shown as its own stage, but the
   headline includes it.
 
+## Uncertainty ranges (assumed)
+
+The sources do not publish uncertainty ranges. The spreads in `config/analysis.yaml` are the author's
+assumptions: a coefficient of variation from 5% at DQR 1 to 50% at DQR 5, and 5% on inventory
+quantities. The P5 to P95 range shows how much weak data could matter. It is not a statistical
+confidence interval.
+
 ## GWP basis
 
 The plan's target is IPCC AR6 GWP100, but the sources do not share one basis: DESNZ uses AR4/AR5,

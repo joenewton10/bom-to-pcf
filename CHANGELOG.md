@@ -1,5 +1,13 @@
 # Changelog
 
+## Phase 9 — Scenarios, sensitivity, variants
+
+- Scenario files for baseline, green electricity, recycled PET and high scrap, compared side by side.
+- Sensitivity sliders using the same levers as the scenarios.
+- Monte Carlo with P5, P50 and P95 and a fixed seed option. Spreads are assumed and labelled so.
+- Product-family batch of 36 variants, with chart and CSV download.
+- `pcf run --scenario` and `pcf variants`.
+
 ## Phase 8 — Hotspots, priority ranking & supplier requests
 
 - Supplier priority ranking with plain-language recommendations, checked against a hand-worked fixture.
