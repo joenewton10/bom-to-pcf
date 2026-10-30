@@ -24,6 +24,7 @@ RULES = PrimaryDataRules(
     plausibility_high=5.0,
     allowed_boundaries=["cradle-to-gate"],
     example_ratio=0.8,
+    example_primary_share=0.5,
 )
 ACCEPT = SubmissionCheck(accepted=True, reasons=[], value_per_kg=1.0, secondary_per_kg=2.0)
 REJECT = SubmissionCheck(accepted=False, reasons=["Too old."])
@@ -46,6 +47,7 @@ def submission(**overrides: object) -> SupplierPcf:
         "method": "ISO 14067",
         "boundary": "cradle-to-gate",
         "dqr": 1.5,
+        "primary_data_share": 0.5,
     }
     return SupplierPcf(**(fields | overrides))
 

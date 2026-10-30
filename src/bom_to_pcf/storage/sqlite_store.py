@@ -3,6 +3,7 @@
 import json
 import sqlite3
 from contextlib import closing
+from datetime import UTC, datetime
 from pathlib import Path
 
 from bom_to_pcf.models import ProjectState
@@ -15,6 +16,9 @@ CURRENT_FIELDS = ("active", "review_items")
 class SQLiteStore(StorageBackend):
     def __init__(self, path: Path | str) -> None:
         self._path = str(path)
+        self._create_tables()
+
+    def _create_tables(self) -> None:
         with closing(self._connect()) as connection, connection:
             for table in HISTORY_TABLES:
                 connection.execute(
@@ -29,6 +33,13 @@ class SQLiteStore(StorageBackend):
             connection.execute(
                 "CREATE TABLE IF NOT EXISTS current (name TEXT PRIMARY KEY, payload TEXT)"
             )
+
+    def start_fresh(self) -> None:
+        """Move the database aside, so nothing is lost, and begin a new one."""
+        path = Path(self._path)
+        stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S%f")
+        path.rename(path.with_name(f"{path.stem}-archive-{stamp}{path.suffix}"))
+        self._create_tables()
 
     def _connect(self) -> sqlite3.Connection:
         return sqlite3.connect(self._path)

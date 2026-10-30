@@ -48,3 +48,4 @@ primary_data:
   plausibility_high: 5.0
   allowed_boundaries: [cradle-to-gate]
   example_ratio: 0.8 # the page's test example, as a share of the secondary value
+  example_primary_share: 0.5 # the test example's stated primary share, also a test value

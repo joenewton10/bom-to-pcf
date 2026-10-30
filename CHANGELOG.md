@@ -1,5 +1,11 @@
 # Changelog
 
+## After Phase 7
+
+- Primary data share now uses the supplier's stated share. A PCF with no stated share is not counted as primary and is reported as unknown.
+- Start fresh button; locally it archives the database instead of deleting it.
+- The app re-reads saved data on every page run, so browser tabs no longer go stale.
+
 ## Phase 7 — Primary data, storage & audit
 
 - Supplier PCFs by form or file, checked against unit, age, method, boundary and plausibility rules.

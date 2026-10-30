@@ -177,6 +177,7 @@ class EmissionFactor(BaseModel):
     dqr_time: float | None = Field(default=None, ge=1, le=5)
     notes: str = ""
     status: str
+    primary_data_share: float | None = Field(default=None, ge=0, le=1)
 
     @property
     def is_placeholder(self) -> bool:
@@ -296,6 +297,7 @@ class PrimaryDataRules(BaseModel):
     plausibility_high: float = Field(gt=0)
     allowed_boundaries: list[str]
     example_ratio: float = Field(gt=0)
+    example_primary_share: float = Field(ge=0, le=1)
 
 
 class MethodConfig(BaseModel):
@@ -384,6 +386,7 @@ class PcfResult(BaseModel):
     missing: list[str]
     known_omissions: list[str]
     primary_data_share: float
+    primary_share_unknown: float
     dqr: DqrScore
     mass_balance: MassBalance
 

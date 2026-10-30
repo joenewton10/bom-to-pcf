@@ -111,6 +111,18 @@ def get_project() -> ProjectState:
     return st.session_state[PROJECT]
 
 
+def refresh_project() -> None:
+    """Forget the working copy, so the next read sees what any other tab has saved."""
+    st.session_state.pop(PROJECT, None)
+
+
+def start_fresh() -> None:
+    """Begin again with no data, review decisions or supplier data."""
+    get_store().start_fresh()
+    for key in (PROJECT, BUNDLE, DATA_SOURCE, PROGRESS, LAST_BEFORE):
+        st.session_state.pop(key, None)
+
+
 def set_project(state: ProjectState) -> None:
     """Replace the state, saving first so that a refused save changes nothing."""
     get_store().save(state)
@@ -122,7 +134,17 @@ def save_project() -> None:
 
 
 def get_review() -> list[ReviewItem]:
-    return get_project().review_items
+    """Review items, rebuilt if they do not fit the loaded BOM (new data, or another tab reset)."""
+    project = get_project()
+    bundle = get_bundle()
+    if bundle is not None:
+        materials = [line.material_number for line in bundle.bom]
+        if [item.material_number for item in project.review_items] != materials:
+            project.review_items = build_review(
+                bundle.bom, get_candidates(), get_matching_config().top_n
+            )
+            save_project()
+    return project.review_items
 
 
 def get_review_log() -> list[ReviewLogEntry]:
@@ -150,11 +172,7 @@ def _store(bundle: InputBundle, source: str) -> None:
     st.session_state[DATA_SOURCE] = source
     st.session_state[PROGRESS] = {UPLOADED}
     project = get_project()
-    materials = [line.material_number for line in bundle.bom]
-    if [item.material_number for item in project.review_items] != materials:
-        project.review_items = build_review(
-            bundle.bom, get_candidates(), get_matching_config().top_n
-        )
+    get_review()
     st.session_state[REVIEW_VERSION] = st.session_state.get(REVIEW_VERSION, 0) + 1
     save_project()
     for pcf in bundle.supplier_pcfs:
@@ -189,7 +207,7 @@ def get_result() -> PcfResult | None:
     result = _calculate(key, effective, mappings)
     mark_done(CALCULATED)
     progress = st.session_state[PROGRESS]
-    if review_complete(project.review_items):
+    if review_complete(get_review()):
         progress.add(REVIEWED)
     else:
         progress.discard(REVIEWED)

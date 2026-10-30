@@ -46,17 +46,32 @@ is typed in and not verified, because the app has no logins.
 
 The app picks the backend from the address it is being visited on, so a visitor to a shared host can
 never write to a shared file. `BOM_TO_PCF_STORAGE=sqlite` or `session` overrides this. Both backends
-refuse a save or restore that would remove or change saved history.
+refuse a save or restore that would remove or change saved history. Start fresh is the deliberate
+exception, described below.
 
 The progress file also holds the review decisions and review log.
 
+## Primary data share
+
+| Part of the footprint | How much counts as primary |
+|---|---|
+| Quantities from the converting site | All of it |
+| Supplier PCF with a stated primary share | That share of its impact |
+| Supplier PCF with no stated share | None, reported separately as unknown |
+| Database values | None |
+
+## Starting again
+
+Start fresh is at the bottom of the Primary data page. Locally it moves `data/app.db` to
+`data/app-archive-<date>.db`, so no history is destroyed. When hosted it clears the session.
+
 ## Limits
 
-- A supplier PCF counts in full towards the primary data share, even if the supplier reports that only
-  part of its own footprint is primary. The supplier's figure is stored but not yet used in that share.
 - A record's DQR is used for all three dimensions, because the form takes one score.
 - Each material has one value in use, so buying one material from several suppliers is not modelled.
-- Using the local app in two browser tabs at once is not supported: the second tab's save is refused
-  rather than overwriting the first tab's history.
+- Two tabs stay in step because the app re-reads saved data on every page run. If two saves collide at
+  the same instant, the later one is refused with a message, and history is not overwritten.
+- Site quantities count as primary in full, although they are multiplied by database factors. This
+  follows the project plan's definition and has not yet been checked against TfS or PACT.
 - Restoring into a local database with different saved history is refused. To start again, move or
   delete `data/app.db`.

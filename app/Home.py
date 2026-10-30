@@ -9,6 +9,7 @@ from components import (
     UPLOAD_PAGE,
     sidebar_progress,
 )
+from state import refresh_project
 
 st.set_page_config(page_title="bom-to-pcf", layout="wide")
 
@@ -21,5 +22,6 @@ page = st.navigation(
         st.Page(PRIMARY_PAGE, title="Primary data"),
     ]
 )
+refresh_project()
 page.run()
 sidebar_progress()

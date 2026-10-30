@@ -30,6 +30,10 @@ class StorageBackend(ABC):
     def _write(self, state: ProjectState) -> None:
         """Store the state."""
 
+    @abstractmethod
+    def start_fresh(self) -> None:
+        """Begin again with an empty state, keeping saved history where possible."""
+
     def save(self, state: ProjectState) -> None:
         """Save the state, refusing anything that would rewrite history."""
         stored = self.load()
@@ -38,7 +42,8 @@ class StorageBackend(ABC):
             if new[: len(old)] != old:
                 raise HistoryConflictError(
                     f"this would change the saved {name.replace('_', ' ')}, which is never "
-                    "overwritten"
+                    "overwritten. "
+                    "If another tab saved changes, refresh this page and try again"
                 )
         self._write(state)
 

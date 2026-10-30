@@ -18,3 +18,6 @@ class SessionStore(StorageBackend):
 
     def _write(self, state: ProjectState) -> None:
         self._session[STATE_KEY] = state.model_dump_json()
+
+    def start_fresh(self) -> None:
+        self._session.pop(STATE_KEY, None)

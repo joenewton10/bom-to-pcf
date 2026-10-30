@@ -3,7 +3,7 @@
 from datetime import date
 
 import streamlit as st
-from components import disclaimer, no_data_prompt
+from components import START_PAGE, disclaimer, no_data_prompt
 from state import (
     LAST_BEFORE,
     REVIEW_VERSION,
@@ -17,6 +17,7 @@ from state import (
     get_result,
     save_project,
     set_project,
+    start_fresh,
     submit_pcf,
 )
 
@@ -88,6 +89,7 @@ def fill_example() -> None:
     st.session_state["primary_method"] = METHODS[0]
     st.session_state["primary_boundary"] = BOUNDARIES[0]
     st.session_state["primary_dqr"] = EXAMPLE_DQR
+    st.session_state["primary_share"] = get_method().primary_data.example_primary_share
     st.session_state["primary_notes"] = EXAMPLE_NOTE
 
 
@@ -216,10 +218,10 @@ else:
         before = result
         try:
             revert(project, undo_material, target, user, undo_reason)
+            save_project()
         except ValueError as error:
             st.error(f"Nothing was changed: {error}.")
         else:
-            save_project()
             st.session_state[LAST_BEFORE] = before
             st.rerun()
 
@@ -251,3 +253,19 @@ if st.button("Restore progress", disabled=restore is None):
         st.session_state[REVIEW_VERSION] += 1
         st.session_state.pop(LAST_BEFORE, None)
         st.rerun()
+
+st.header("Start fresh")
+if backend_name() == SQLITE:
+    st.caption(
+        "Clears your data, review decisions and supplier data from the app. The old database is "
+        "kept beside the new one as data/app-archive-<date>.db."
+    )
+else:
+    st.caption(
+        "Clears your data, review decisions and supplier data from this session. Download your "
+        "progress first if you want to keep it."
+    )
+confirmed = st.checkbox("Yes, start again", key="confirm_fresh")
+if st.button("Start fresh", disabled=not confirmed):
+    start_fresh()
+    st.switch_page(START_PAGE)

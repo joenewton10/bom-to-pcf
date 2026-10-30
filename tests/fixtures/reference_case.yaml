@@ -79,6 +79,7 @@ method:
     plausibility_high: 5.0
     allowed_boundaries: [cradle-to-gate]
     example_ratio: 0.8
+    example_primary_share: 0.5
 expected:
   kg_co2e_per_kg: 2.74
   kg_co2e_per_1000_pieces: 5.48

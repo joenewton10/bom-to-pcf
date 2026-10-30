@@ -10,7 +10,7 @@ from bom_to_pcf.io.factor_store import load_factors, read_mappings
 from bom_to_pcf.io.inputs import InputBundle
 from bom_to_pcf.methods.cutoff import apply_cut_off
 from bom_to_pcf.methods.data_quality import aggregate_dqr
-from bom_to_pcf.methods.primary_share import primary_data_share
+from bom_to_pcf.methods.primary_share import primary_data_share, unknown_primary_share
 from bom_to_pcf.models import (
     EmissionFactor,
     LciLine,
@@ -133,6 +133,7 @@ def run_pcf(
         missing=missing,
         known_omissions=method.known_omissions,
         primary_data_share=primary_data_share(kept, known, method.primary_share.site_stages),
+        primary_share_unknown=unknown_primary_share(kept, known),
         dqr=aggregate_dqr(kept, known),
         mass_balance=balance,
     )

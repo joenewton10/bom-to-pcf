@@ -63,6 +63,11 @@ st.caption(
     "PCF in kg CO₂e, cradle-to-gate. Data quality runs from 1 (best) to 5 (worst). "
     f"GWP set: {result.gwp_set}; sources do not all share one GWP basis."
 )
+if result.primary_share_unknown:
+    st.caption(
+        f"{result.primary_share_unknown:.0%} of the footprint is supplier data with no stated "
+        "primary share. It is not counted as primary, so the real share may be higher."
+    )
 
 stages = stage_table(result)
 materials = material_table(result)

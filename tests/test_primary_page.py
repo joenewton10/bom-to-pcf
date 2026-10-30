@@ -16,8 +16,8 @@ def button(at: AppTest, label: str):
     return next(b for b in at.button if b.label == label)
 
 
-def add_example(at: AppTest) -> AppTest:
-    at.text_input(key="primary_user").input("Test Reviewer")
+def add_example(at: AppTest, user: str = "Test Reviewer") -> AppTest:
+    at.text_input(key="primary_user").input(user)
     at.run()
     button(at, "Fill with a test example").click()
     at.run()

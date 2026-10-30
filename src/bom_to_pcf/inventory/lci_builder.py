@@ -46,6 +46,7 @@ def supplier_factor(pcf: SupplierPcf) -> EmissionFactor:
         dqr_tech=pcf.dqr,
         dqr_geo=pcf.dqr,
         dqr_time=pcf.dqr,
+        primary_data_share=pcf.primary_data_share,
         status="ACTIVE",
     )
 

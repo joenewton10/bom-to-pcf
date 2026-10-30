@@ -19,6 +19,7 @@ htmlcov/
 
 # Local persistence
 data/app.db
+data/app-archive-*.db
 
 # Run outputs (curated examples are kept)
 outputs/*
