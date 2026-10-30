@@ -1,5 +1,6 @@
 """Minimal command line interface for testing and batch runs."""
 
+import json
 from pathlib import Path
 from typing import Annotated
 
@@ -13,8 +14,13 @@ from bom_to_pcf.engine.python_engine import run_with_config
 from bom_to_pcf.io.factor_store import load_factors, read_mappings
 from bom_to_pcf.io.inputs import load_inputs
 from bom_to_pcf.models import AnalysisConfig, MethodConfig, ProductConfig, issues_table
+from bom_to_pcf.outputs.examples import write_examples
+from bom_to_pcf.outputs.pact_export import build_footprint, validation_errors
+from bom_to_pcf.outputs.runs import read_run, write_run
 from bom_to_pcf.scenarios import Scenario, run_scenario
 from bom_to_pcf.variants import FamilyConfig, family_table, run_family
+
+OUTPUTS_VARIABLE = "BOM_TO_PCF_OUTPUTS"
 
 app = typer.Typer(help="Calculate product carbon footprints from a bill of materials.")
 
@@ -34,6 +40,7 @@ def version() -> None:
 def run(
     product: Annotated[Path, typer.Option(help="Product config YAML.")],
     scenario: Annotated[str | None, typer.Option(help="Scenario file name, no extension.")] = None,
+    outputs_dir: Annotated[Path, typer.Option(envvar=OUTPUTS_VARIABLE)] = Path("outputs"),
 ) -> None:
     """Calculate the footprint and print it with its status and data gaps."""
     config = ProductConfig.from_yaml(product)
@@ -67,6 +74,39 @@ def run(
         f"{sorted({x.item for x in result.excluded})}",
         markup=False,
     )
+    run_id = write_run(result, bundle, config, product, scenario, outputs_dir)
+    console.print(f"Run saved: {run_id}", markup=False)
+
+
+@app.command("export-pact")
+def export_pact(
+    run_id: Annotated[str, typer.Option(help="A run ID printed by pcf run.")],
+    outputs_dir: Annotated[Path, typer.Option(envvar=OUTPUTS_VARIABLE)] = Path("outputs"),
+) -> None:
+    """Write a saved run as PACT JSON, after checking it against the official schema."""
+    try:
+        manifest, result = read_run(run_id, outputs_dir)
+    except ValueError as error:
+        typer.echo(f"Error: {error}.")
+        raise typer.Exit(code=1) from error
+    config = ProductConfig.from_yaml(manifest["product"])
+    method = MethodConfig.from_yaml(config.method_file)
+    factors, _ = load_factors(config.factors_file, config.sources_file)
+    footprint = build_footprint(result, config, method, {f.factor_id: f for f in factors})
+    errors = validation_errors(footprint)
+    if errors:
+        typer.echo("The export fails the official schema: " + "; ".join(errors))
+        raise typer.Exit(code=1)
+    path = outputs_dir / run_id / "pact.json"
+    path.write_text(json.dumps(footprint, indent=2, ensure_ascii=False), encoding="utf-8")
+    typer.echo(f"Written: {path}")
+
+
+@app.command("make-examples")
+def make_examples() -> None:
+    """Regenerate the example outputs in outputs/examples."""
+    for name in write_examples():
+        typer.echo(name)
 
 
 @app.command()

@@ -1,0 +1,74 @@
+# Product carbon footprint report: {{ config.name }}
+
+**Illustrative data, not a verified PCF. Do not use for real claims.**
+
+Status: {{ result.status_label }}
+
+## Goal and scope
+
+- **Product:** {{ config.name }} ({{ config.product_id }})
+- **Declared unit:** 1 kg of finished parts, also reported per 1,000 parts ({{ "%.2f"|format(config.part_mass_g) }} g per part)
+- **Boundary:** cradle-to-gate
+- **Reference year:** {{ config.reference_year }}
+- **GWP target:** {{ result.gwp_set }}. Sources do not all share one basis.
+
+## Result
+
+| Measure | Value |
+|---|---|
+| PCF per kg | {{ "%.3f"|format(result.kg_co2e_per_kg) }} kg CO2e |
+| PCF per 1,000 parts | {{ "%.3f"|format(result.kg_co2e_per_1000_pieces) }} kg CO2e |
+| Primary data share | {{ "%.1f"|format(result.primary_data_share * 100) }}% |
+{% if result.dqr.overall is not none -%}
+| Data quality (1 best, 5 worst) | {{ "%.2f"|format(result.dqr.overall) }} |
+{% endif -%}
+| Assumed range, P5 to P95 | {{ "%.2f"|format(uncertainty.p5) }} to {{ "%.2f"|format(uncertainty.p95) }} kg CO2e per kg ({{ uncertainty.runs }} runs) |
+
+The range uses assumed spreads based on quality scores. It shows how much weak data could matter, and it is not a statistical confidence interval.
+{% if result.draft_reasons %}
+## Why this is a draft
+{% for reason in result.draft_reasons %}
+- {{ reason }}
+{%- endfor %}
+{% endif %}
+{%- if result.missing %}
+## Missing data
+{% for text in result.missing %}
+- {{ text }}
+{%- endfor %}
+{% endif %}
+## By stage
+
+| Stage | kg CO2e per kg | Share |
+|---|---|---|
+{% for row in stages -%}
+| {{ row["Stage"] }} | {{ "%.3f"|format(row["kg CO2e per kg"]) }} | {{ "%.1f"|format(row["Share"] * 100) }}% |
+{% endfor %}
+## By material
+
+| Material | kg CO2e per kg | Share |
+|---|---|---|
+{% for row in materials -%}
+| {{ row["Material"] }} | {{ "%.3f"|format(row["kg CO2e per kg"]) }} | {{ "%.1f"|format(row["Share"] * 100) }}% |
+{% endfor %}
+## Mass balance
+
+Per kg of product: {{ "%.3f"|format(result.mass_balance.inputs_kg) }} kg in, {{ "%.3f"|format(result.mass_balance.product_kg) }} kg product, {{ "%.3f"|format(result.mass_balance.scrap_kg) }} kg scrap. Unexplained: {{ "%.2f"|format(result.mass_balance.imbalance_share * 100) }}% (limit {{ "%.0f"|format(result.mass_balance.tolerance_share * 100) }}%).
+
+## Not modelled
+{% for text in result.known_omissions %}
+- {{ text }}
+{%- endfor %}
+
+Left out by the cut-off rule: {{ "%.1f"|format(result.excluded_share * 100) }}% of the calculated impact.
+
+## Inventory, with factor and source for every line
+
+| Stage | Item | Quantity per kg | Unit | Factor | Source | kg CO2e per kg |
+|---|---|---|---|---|---|---|
+{% for line in result.lines -%}
+| {{ stage_labels.get(line.stage, line.stage) }} | {{ line.description }} | {{ "%.5f"|format(line.quantity) }} | {{ line.unit }} | {{ line.factor_id or "none" }} | {{ line.source_id or "none" }} | {{ "%.4f"|format(line.impact) if line.impact is not none else "no value" }} |
+{% endfor %}
+## Method
+
+See `docs/methodology.md` for the method and `docs/data_gaps.md` for placeholders, proxies, weak factors and known differences from PACT Methodology 3.0.

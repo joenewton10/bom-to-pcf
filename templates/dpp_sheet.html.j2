@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product data sheet: {{ config.product_id }}</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1rem; color: #1c2526; background: #fff; }
+  h1 { font-size: 1.5rem; margin-bottom: .25rem; }
+  h2 { font-size: 1.1rem; margin-top: 1.75rem; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { text-align: left; padding: .4rem .5rem; border-bottom: 1px solid #d7dedc; }
+  td.number { text-align: right; font-variant-numeric: tabular-nums; }
+  .notice { background: #fff8e1; border-left: 4px solid #b58900; padding: .6rem .8rem; margin: 1rem 0; }
+  .figure { font-size: 2rem; font-weight: 600; color: #1f6f5c; }
+</style>
+</head>
+<body>
+<h1>{{ config.name }}</h1>
+<p>Product ID: {{ config.product_id }} · Reference year: {{ config.reference_year }}</p>
+<div class="notice">
+  <strong>Illustrative data, not a verified PCF.</strong> Status: {{ result.status_label }}.
+  This sheet shows the style of a Digital Product Passport. It is not a passport under the EU ESPR, and
+  no requirements have been set for this product group.
+</div>
+<h2>Carbon footprint, cradle-to-gate</h2>
+<p class="figure">{{ "%.2f"|format(result.kg_co2e_per_kg) }} kg CO₂e per kg</p>
+<p>{{ "%.2f"|format(result.kg_co2e_per_1000_pieces) }} kg CO₂e per 1,000 parts ({{ result.gwp_set }} target; sources do not all share one GWP basis).</p>
+<h2>Data reliability</h2>
+<table>
+  <tr><th>Primary data share</th><td class="number">{{ "%.0f"|format(result.primary_data_share * 100) }}%</td></tr>
+  {% if result.dqr.overall is not none -%}
+  <tr><th>Data quality, technology (1 best, 5 worst)</th><td class="number">{{ "%.1f"|format(result.dqr.technological) }}</td></tr>
+  <tr><th>Data quality, geography</th><td class="number">{{ "%.1f"|format(result.dqr.geographical) }}</td></tr>
+  <tr><th>Data quality, time</th><td class="number">{{ "%.1f"|format(result.dqr.temporal) }}</td></tr>
+  {% endif -%}
+</table>
+<h2>By stage</h2>
+<table>
+  <tr><th>Stage</th><th>kg CO₂e per kg</th><th>Share</th></tr>
+  {% for row in stages -%}
+  <tr><td>{{ row["Stage"] }}</td><td class="number">{{ "%.3f"|format(row["kg CO2e per kg"]) }}</td><td class="number">{{ "%.0f"|format(row["Share"] * 100) }}%</td></tr>
+  {% endfor -%}
+</table>
+<h2>By material</h2>
+<table>
+  <tr><th>Material</th><th>kg CO₂e per kg</th><th>Share</th></tr>
+  {% for row in materials -%}
+  <tr><td>{{ row["Material"] }}</td><td class="number">{{ "%.3f"|format(row["kg CO2e per kg"]) }}</td><td class="number">{{ "%.0f"|format(row["Share"] * 100) }}%</td></tr>
+  {% endfor -%}
+</table>
+{% if result.known_omissions -%}
+<h2>Not modelled</h2>
+<ul>
+  {% for text in result.known_omissions -%}
+  <li>{{ text }}</li>
+  {% endfor -%}
+</ul>
+{% endif -%}
+</body>
+</html>

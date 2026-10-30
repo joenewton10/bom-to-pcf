@@ -44,6 +44,7 @@ class MaterialProperties(BaseModel):
     grammage_g_m2: float | None = Field(default=None, gt=0)
     kg_per_piece: float | None = Field(default=None, gt=0)
     role: Literal["product", "packaging"] = "product"
+    fossil_carbon_fraction: float | None = Field(default=None, ge=0, le=1)
 
     @property
     def kg_per_m2(self) -> float | None:
@@ -59,6 +60,17 @@ class ValidationRules(BaseModel):
     bom_valid_from_max_age_years: int = Field(gt=0)
     supplier_pcf_max_age_years: int = Field(gt=0)
     scrap_destinations: list[str]
+
+
+class PactInfo(BaseModel):
+    """Details the PACT export needs that a calculation does not."""
+
+    company_name: str
+    company_id: str
+    product_id: str
+    geography_country: str
+    boundary_description: str
+    allocation_description: str
 
 
 class ProductConfig(BaseModel):
@@ -78,6 +90,8 @@ class ProductConfig(BaseModel):
     matching_file: str = "config/matching.yaml"
     engagement_file: str = "config/supplier_engagement.yaml"
     analysis_file: str = "config/analysis.yaml"
+    claims_file: str = "config/claims_rules.yaml"
+    pact: PactInfo | None = None
     scenarios_dir: str = "config/scenarios"
     materials: dict[str, MaterialProperties]
     validation: ValidationRules

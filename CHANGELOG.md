@@ -1,5 +1,13 @@
 # Changelog
 
+## Phase 10 — Outputs & claims check
+
+- PACT export validated against the official schema, version 3.0.3, pinned in `schemas/pact/`.
+- DPP-style data sheet and methods report, with examples in `outputs/examples/`.
+- Claims check with rules in `config/claims_rules.yaml`. A draft result blocks every claim.
+- Command line runs saved to `outputs/<run_id>/`, plus `pcf export-pact` and `pcf make-examples`.
+- `docs/claims_check.md` and `docs/regulatory_context.md`.
+
 ## Phase 9 — Scenarios, sensitivity, variants
 
 - Scenario files for baseline, green electricity, recycled PET and high scrap, compared side by side.

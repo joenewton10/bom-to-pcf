@@ -2,6 +2,7 @@
 
 import streamlit as st
 from components import (
+    EXPORT_PAGE,
     HOTSPOTS_PAGE,
     MATCH_PAGE,
     PRIMARY_PAGE,
@@ -23,6 +24,7 @@ BUILT_PAGES = {
     5: SUPPLIER_PAGE,
     6: PRIMARY_PAGE,
     7: SCENARIOS_PAGE,
+    8: EXPORT_PAGE,
 }
 
 FLOW = """

@@ -60,6 +60,17 @@ assumptions: a coefficient of variation from 5% at DQR 1 to 50% at DQR 5, and 5%
 quantities. The P5 to P95 range shows how much weak data could matter. It is not a statistical
 confidence interval.
 
+## PACT export
+
+- `pcfIncludingBiogenicUptake` equals the value excluding it, because biogenic carbon is not modelled
+  separately. The cardboard, liner paper and pallet do contain biogenic carbon.
+- `fossilCarbonContent` covers PET film only, from its chemical formula. Adhesive and liner silicone are
+  left out, so it is too low.
+- `fossilGhgEmissions` is the whole PCF, because sources do not separate fossil from other emissions.
+- `ipccCharacterizationFactors` lists AR6, AR5 and AR4, the reports the sources are known or likely to
+  use. Several sources do not state a basis.
+- `companyIds` and `productIds` use example URNs for a fictional company.
+
 ## GWP basis
 
 The plan's target is IPCC AR6 GWP100, but the sources do not share one basis: DESNZ uses AR4/AR5,

@@ -1,0 +1,101 @@
+{
+  "id": "0530ebd2-d0f5-5995-a090-7ebf84fb817f",
+  "specVersion": "3.0.3",
+  "created": "2026-01-01T00:00:00Z",
+  "status": "Active",
+  "validityPeriodStart": "2026-01-01T00:00:00Z",
+  "validityPeriodEnd": "2029-01-01T00:00:00Z",
+  "companyName": "Fictional Converter (illustrative)",
+  "companyIds": [
+    "urn:company:example:fictional-converter"
+  ],
+  "productDescription": "Die-cut PET film insulation part, 125 µm, adhesive-backed",
+  "productIds": [
+    "urn:product:example:pet-diecut-125"
+  ],
+  "productNameCompany": "Die-cut PET film insulation part, 125 µm, adhesive-backed",
+  "comment": "ILLUSTRATIVE DATA, not a verified PCF. Do not use for real claims. Tool status: DRAFT. Biogenic carbon is not separately modelled, so both PCF values are equal. Fossil carbon content covers PET film only. Sources do not share one GWP basis. Not modelled: Site heating (the routing data has no heating use); Making the PE bag from LDPE resin; PET film stretching and heat-setting (film making is a proxy from extrusion electricity); Coating the release liner (the liner is a proxy from paper and silicone).",
+  "pcf": {
+    "declaredUnitOfMeasurement": "kilogram",
+    "declaredUnitAmount": "1",
+    "productMassPerDeclaredUnit": "1",
+    "referencePeriodStart": "2025-01-01T00:00:00Z",
+    "referencePeriodEnd": "2026-01-01T00:00:00Z",
+    "geographyCountry": "DE",
+    "boundaryProcessesDescription": "Cradle-to-gate: materials, inbound transport, slitting, laminating, die-cutting, inspection, packaging, site overhead electricity and scrap treatment.",
+    "pcfExcludingBiogenicUptake": "3.159558",
+    "pcfIncludingBiogenicUptake": "3.159558",
+    "fossilCarbonContent": "0.419686",
+    "fossilGhgEmissions": "3.159558",
+    "packagingEmissionsIncluded": true,
+    "packagingGhgEmissions": "0.062120",
+    "ipccCharacterizationFactors": [
+      "AR6",
+      "AR5",
+      "AR4"
+    ],
+    "crossSectoralStandards": [
+      "ISO14067",
+      "PACT-3.0"
+    ],
+    "productOrSectorSpecificRules": [
+      {
+        "operator": "Other",
+        "ruleNames": [
+          "The Product Carbon Footprint Guideline for the Chemical Industry, v.3"
+        ]
+      }
+    ],
+    "otherOperatorName": "TfS",
+    "exemptedEmissionsPercent": "0.000000",
+    "allocationRulesDescription": "Scrap to recycling by the cut-off approach. Site overhead by mass of output.",
+    "secondaryEmissionFactorSources": [
+      {
+        "name": "APR_2020",
+        "version": "2018"
+      },
+      {
+        "name": "CALC_FILM_PROXY",
+        "version": "2024"
+      },
+      {
+        "name": "CALC_LINER_PROXY",
+        "version": "2024"
+      },
+      {
+        "name": "CALC_PET_STOICH",
+        "version": "2025"
+      },
+      {
+        "name": "DESNZ_2025",
+        "version": "2025"
+      },
+      {
+        "name": "FEFCO_2021",
+        "version": "2021"
+      },
+      {
+        "name": "IVK_2014",
+        "version": "2014"
+      },
+      {
+        "name": "PE_ECOPROFILE_2026",
+        "version": "2026"
+      },
+      {
+        "name": "UBA_CC13_2025",
+        "version": "2024"
+      },
+      {
+        "name": "VASQUEZ_2022",
+        "version": "2022"
+      }
+    ],
+    "primaryDataShare": "0.000000",
+    "dqi": {
+      "technologicalDQR": "3.283835",
+      "geographicalDQR": "4.145332",
+      "temporalDQR": "3.787700"
+    }
+  }
+}

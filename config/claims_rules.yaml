@@ -1,0 +1,95 @@
+# Environmental claims check. A guidance aid, not legal advice. See docs/claims_check.md.
+# Rules run in this order: not_supported, then the draft block, then needs_more, then supported.
+
+legal_note: >-
+  Guidance only, not legal advice. Directive (EU) 2024/825 amends EU business-to-consumer law, so it may
+  not apply directly to sales between businesses, but these rules are a sensible standard for any claim.
+
+examples:
+  - "{per_kg} kg CO2e per kg, cradle-to-gate, calculated based on ISO 14067"
+  - Climate neutral film
+  - Eco-friendly insulation part
+  - 20% lower carbon footprint than our previous part
+  - Made with recycled PET
+
+not_supported:
+  - id: offset_based
+    patterns:
+      - "(climate|carbon|co2|ghg)[ -]?neutral"
+      - "klimaneutral"
+      - "net[ -]?zero"
+      - "offset"
+      - "compensat"
+      - "kompensiert"
+    reason: >-
+      Claims of neutral, reduced or positive impact based on offsetting are banned, and this PCF
+      does not show a neutral product.
+    basis: Directive (EU) 2024/825, Annex I point 4c, and recital 12
+  - id: generic
+    patterns:
+      - "\\beco\\b"
+      - "eco[ -]?friendly"
+      - "environment(al|ally)?[ -]?friendly"
+      - "umweltfreundlich"
+      - "\\bgreen\\b"
+      - "ecological"
+      - "ökologisch"
+      - "sustainable"
+      - "nachhaltig"
+      - "(climate|carbon|planet)[ -]?friendly"
+      - "klimafreundlich"
+      - "energy[ -]?efficient"
+      - "biodegradable"
+      - "bio[ -]?based"
+      - "environmentally correct"
+      - "gentle on the environment"
+    reason: >-
+      This is a generic environmental claim. It needs recognised excellent environmental performance,
+      such as an EU Ecolabel, which a PCF does not show.
+    basis: Directive (EU) 2024/825, Annex I point 4a, and recital 9
+
+draft_block:
+  reason: >-
+    The result is still a draft, so it cannot support a claim. Review every material match and resolve
+    the draft reasons first.
+  basis: This tool's rule, from the project plan
+
+needs_more:
+  - id: comparative
+    patterns:
+      - "(lower|less|fewer|better|smaller|reduced)\\b.*\\b(than|compared|versus|vs)\\b"
+      - "\\d+ ?% ?(lower|less|fewer|better|reduction|reduced|smaller)"
+      - "\\b(lowest|best|least)\\b"
+    reason: >-
+      A comparison needs a documented benchmark with the same boundary and method. This tool holds no
+      benchmark.
+    basis: This tool's rule, from the project plan
+  - id: partial_aspect
+    patterns:
+      - "recycled"
+      - "renewable"
+      - "low[ -]?carbon"
+      - "reduced"
+    reason: >-
+      State exactly which part of the product this covers, with evidence. A claim about the entire
+      product must not rest on one aspect of it.
+    basis: Directive (EU) 2024/825, Annex I point 4b
+
+supported:
+  required:
+    - "cradle[ -]to[ -]gate"
+    - "iso ?14067"
+  value_tolerance: 0.01
+  reason: >-
+    A specific figure that matches this result, with its boundary and method. It is still illustrative
+    data, so it should not be used as a real claim.
+  mismatch_reason: >-
+    The figure does not match this result, or its unit is missing. Use the figure shown on the Results
+    page, per kg or per 1,000 parts.
+  basis: Specific claims are not generic under Directive (EU) 2024/825, recital 9
+
+unrecognised:
+  reason: >-
+    This tool does not recognise this claim, so a person should review it. Check that it is specific,
+    and that the result supports it.
+  basis: This tool's rule

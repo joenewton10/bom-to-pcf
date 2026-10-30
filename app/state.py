@@ -7,6 +7,7 @@ from pathlib import Path
 
 import streamlit as st
 
+from bom_to_pcf.claims import ClaimsRules
 from bom_to_pcf.engine.python_engine import run_with_config
 from bom_to_pcf.inventory.lci_builder import supplier_factor
 from bom_to_pcf.io.factor_store import load_factors
@@ -119,6 +120,10 @@ def known_factors() -> dict[str, EmissionFactor]:
         for factor in (supplier_factor(pcf) for pcf in get_effective_bundle().supplier_pcfs)
     }
     return known
+
+
+def get_claims_rules() -> ClaimsRules:
+    return ClaimsRules.from_yaml(ROOT / get_config().claims_file)
 
 
 def templates_dir() -> Path:

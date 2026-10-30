@@ -13,6 +13,7 @@ HOTSPOTS_PAGE = "pages/4_Hotspots_and_priorities.py"
 SUPPLIER_PAGE = "pages/5_Supplier_requests.py"
 PRIMARY_PAGE = "pages/6_Primary_data.py"
 SCENARIOS_PAGE = "pages/7_Scenarios_and_variants.py"
+EXPORT_PAGE = "pages/8_Export_and_claims.py"
 MIN_CHART_HEIGHT = 220
 ROW_HEIGHT = 44
 

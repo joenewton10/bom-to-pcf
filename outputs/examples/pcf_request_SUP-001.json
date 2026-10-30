@@ -1,0 +1,18 @@
+{
+  "records": [
+    {
+      "supplier_id": "SUP-001",
+      "material_number": "100001",
+      "material_description": "PET-Folie 125 µm transparent",
+      "pcf_value": null,
+      "declared_unit": "kg",
+      "reference_period_start": "2025-01-01",
+      "reference_period_end": "2025-12-31",
+      "method": null,
+      "primary_data_share": null,
+      "dqr": null,
+      "boundary": "cradle-to-gate",
+      "notes": null
+    }
+  ]
+}

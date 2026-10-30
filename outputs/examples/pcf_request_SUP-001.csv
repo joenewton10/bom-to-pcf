@@ -1,0 +1,2 @@
+supplier_id,material_number,material_description,pcf_value,declared_unit,reference_period_start,reference_period_end,method,primary_data_share,dqr,boundary,notes
+SUP-001,100001,PET-Folie 125 µm transparent,,kg,2025-01-01,2025-12-31,,,,cradle-to-gate,
