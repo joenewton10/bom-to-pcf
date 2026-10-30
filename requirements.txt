@@ -1,0 +1,2 @@
+# Used by Streamlit Community Cloud. Dependencies are declared once, in pyproject.toml.
+-e .

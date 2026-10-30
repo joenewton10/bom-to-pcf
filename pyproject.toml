@@ -1,0 +1,46 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bom-to-pcf"
+version = "0.1.0"
+description = "Automated cradle-to-gate product carbon footprint calculation from a bill of materials."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Joseph Newton" }]
+dependencies = [
+    "streamlit>=1.36",
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "pandas>=2.0",
+    "plotly>=5.0",
+    "typer>=0.12",
+    "rich>=13.0",
+    "jsonschema>=4.0",
+    "rapidfuzz>=3.0",
+    "jinja2>=3.1",
+]
+
+[project.optional-dependencies]
+llm = ["anthropic"]
+openlca = ["olca-ipc", "olca-schema"]
+dev = ["pytest", "pytest-cov", "ruff", "pre-commit"]
+
+[project.scripts]
+pcf = "bom_to_pcf.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bom_to_pcf"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=bom_to_pcf --cov-report=term-missing"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
