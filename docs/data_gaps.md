@@ -11,12 +11,17 @@ Every placeholder and representative value in the project is listed here.
 
 While these are placeholders, both materials fall back to secondary data, and the reader logs it.
 
-| Emission factor | Why it is empty | What would fill it |
-|---|---|---|
-| `PET_FILM_CONVERSION` | No public source found for PET film extrusion and biaxial stretching | A licensed LCA database or a published film study |
-| `LINER_SILICONE` | No public source found for a silicone-coated release liner | A licensed LCA database, supplier data or an industry study |
+No emission factor is currently a placeholder. Any factor that becomes one must be listed here, and
+results using it are labelled `DRAFT — contains placeholders`.
 
-While either factor is a placeholder, results must be labelled `DRAFT — contains placeholders`.
+## Proxies (built from sourced values, not published factors)
+
+No public factor was found for these two materials, so each is calculated. See `SOURCES.md`.
+
+| Factor | How it is built | Why it is weak | What would replace it |
+|---|---|---|---|
+| `PET_FILM_CONVERSION` | Generic extrusion electricity × German grid | Leaves out stretching and heat-setting, and any heat use, so it is likely too low | Film supplier data or a licensed LCA database |
+| `LINER_SILICONE` | Sack kraft paper plus an assumed silicone coat | Different paper grade, no coating energy, and the coat weight is an assumption | Liner supplier data or a licensed LCA database |
 
 ## Inside the boundary but not modelled
 
@@ -56,4 +61,5 @@ published source, and they are not emission factors.
 - Machine power, throughput, utilisation and scrap rates (`routing_energy_mock.csv`)
 - Transport distances (`transport_legs.csv`)
 - Machine count for machine-hours overhead allocation (`config/method.yaml`)
+- Silicone coat weight in the liner proxy (`data/factors/SOURCES.md`)
 - Supplier names, which are fictional (`suppliers.csv`)

@@ -66,6 +66,35 @@ pallets: A quantification with different software tools. *Maderas. Ciencia y tec
 
 Checked in: the article, Chilean case study, 1200 × 1000 mm pallet.
 
+## CALC_FILM_PROXY
+
+Own calculation from sourced values, not a published factor. Electricity for extrusion × German grid:
+0.5 × 0.427 = 0.2135 kg CO2e per kg film.
+
+- 0.5 kWh/kg is the midpoint of the 0.4-0.6 kWh/kg typical extrusion process load in Kent, R.
+  *Energy Management in Plastics Processing: A Signposting Guide*. British Plastics Federation, 2011.
+  <https://tangram.co.uk/wp-content/uploads/BPF-Energy-Management-in-Plastics-Processing.pdf>
+- 0.427 kg CO2e/kWh is `EL_DE_GRID`, see UBA_CC13_2025.
+
+## CALC_LINER_PROXY
+
+Own calculation from sourced values, not a published factor. For 1 m² of the 60 g/m² liner in
+`config/product_pet_diecut.yaml`:
+
+(58.75 g paper × 0.462 + 1.25 g silicone × 6.36) / 60 g = 0.585 kg CO2e per kg liner.
+
+- 0.462 kg CO2e/kg is the cradle-to-gate fossil footprint of average European sack kraft paper in
+  2024. CEPI Eurokraft and EUROSAC, *European paper sacks reduce carbon footprint by 9% between 2021
+  and 2024*, fact sheet, 16 April 2026 (analysis by RISE).
+  <https://www.eurosac.org/fileadmin/pdf/pdf_press_releases/2026-04-16_Fact-sheet_ESG-Carbon-footprint-2024.pdf>
+- 6.36 kg CO2e/kg is cradle-to-gate PDMS rubber/resin, average global production. denkstatt for the
+  Global Silicone Council, *Update of the Si-Chemistry Carbon Balance, SILICAB 2 Nutshell Report*,
+  2024, Table 9.
+  <https://www.silicones.eu/wp-content/uploads/2024/10/240718-GSC-Nutshell-Report-incl.-Appendix.pdf>
+- 1.25 g/m² silicone coat weight is an assumption, not a sourced value. It is the middle of the
+  0.5-2 g/m² range seen in supplier trade material. That full range moves the factor only from
+  0.51 to 0.66 kg CO2e/kg.
+
 ## CALC_PET_STOICH
 
 Own calculation, not a published factor. PET's repeat unit is C10H8O4 (192.17 g/mol). Complete

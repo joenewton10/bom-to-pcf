@@ -177,7 +177,7 @@ def test_read_mappings_reports_bad_rows() -> None:
     assert issues[0].code == "invalid_mapping"
 
 
-def test_demo_data_is_labelled_draft_and_partial(config: ProductConfig, monkeypatch) -> None:
+def test_demo_data_is_draft_until_matches_are_reviewed(config: ProductConfig, monkeypatch) -> None:
     monkeypatch.chdir(ROOT)
     bundle = load_inputs(config)
     method = MethodConfig.from_yaml(config.method_file)
@@ -185,17 +185,17 @@ def test_demo_data_is_labelled_draft_and_partial(config: ProductConfig, monkeypa
     mappings, _ = read_mappings(config.mappings_file)
     result = run_pcf(bundle, config, method, factors, mappings)
     assert result.is_draft
-    assert result.is_partial
+    assert not result.is_partial
+    assert result.status_label == LABEL_DRAFT
+    assert any("unreviewed" in reason for reason in result.draft_reasons)
     assert result.mass_balance.passed
-    missing = " ".join(result.missing)
-    assert "PET_FILM_CONVERSION" in missing
-    assert "LINER_SILICONE" in missing
-    assert result.known_omissions
+    assert result.excluded_share <= method.cut_off.total_share
+    assert any("stretching" in text for text in result.known_omissions)
 
 
-def test_cli_run_shows_the_partial_label(monkeypatch) -> None:
+def test_cli_run_shows_status_and_reasons(monkeypatch) -> None:
     monkeypatch.chdir(ROOT)
     result = CliRunner().invoke(app, ["run", "--product", "config/product_pet_diecut.yaml"])
     assert result.exit_code == 0
-    assert "partial total" in result.stdout
-    assert "PET_FILM_CONVERSION" in result.stdout
+    assert "DRAFT" in result.stdout
+    assert "unreviewed" in result.stdout

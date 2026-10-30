@@ -52,11 +52,24 @@ def test_every_source_section_is_used() -> None:
 def test_shipped_placeholders_are_listed_in_data_gaps() -> None:
     factors, _ = load_factors(FACTORS, SOURCES)
     gaps = DATA_GAPS.read_text(encoding="utf-8")
-    placeholders = [factor for factor in factors if factor.is_placeholder]
-    assert placeholders
-    for factor in placeholders:
+    for factor in [factor for factor in factors if factor.is_placeholder]:
         assert factor.value is None
         assert factor.factor_id in gaps
+
+
+def test_proxies_are_named_and_carry_the_worst_technology_score() -> None:
+    factors, _ = load_factors(FACTORS, SOURCES)
+    proxies = [factor for factor in factors if "PROXY" in factor.name]
+    assert {factor.factor_id for factor in proxies} == {"PET_FILM_CONVERSION", "LINER_SILICONE"}
+    assert all(factor.dqr_tech == 5 for factor in proxies)
+    gaps = DATA_GAPS.read_text(encoding="utf-8")
+    assert all(factor.factor_id in gaps for factor in proxies)
+
+
+def test_liner_proxy_matches_its_documented_calculation() -> None:
+    factors, _ = load_factors(FACTORS, SOURCES)
+    liner = next(factor for factor in factors if factor.factor_id == "LINER_SILICONE")
+    assert liner.value == pytest.approx((58.75 * 0.462 + 1.25 * 6.36) / 60, abs=0.001)
 
 
 def test_valid_factor_loads() -> None:

@@ -1,5 +1,10 @@
 # Changelog
 
+## Factor update after Phase 4
+
+- `PET_FILM_CONVERSION` and `LINER_SILICONE` are now labelled proxies built from sourced values, with
+  the worst technology score. No emission factor is a placeholder now; supplier PCFs still are.
+
 ## Phase 4 — Inventory & calculation engine
 
 - Mass balance check, inventory builder and Python engine, with results per kg and per 1,000 pieces.

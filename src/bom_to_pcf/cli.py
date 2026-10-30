@@ -45,6 +45,8 @@ def run(product: Annotated[Path, typer.Option(help="Product config YAML.")]) -> 
         console.print(f"  {stage}: {impact:.3f}", markup=False)
     for text in [*result.missing, *result.draft_reasons]:
         console.print(f"- {text}", markup=False)
+    for text in result.known_omissions:
+        console.print(f"- Not modelled: {text}", markup=False)
     console.print(
         f"Left out by cut-off ({result.excluded_share:.1%} of known impact): "
         f"{sorted({x.item for x in result.excluded})}",

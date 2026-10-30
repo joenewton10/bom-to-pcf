@@ -39,3 +39,5 @@ primary_share:
 known_omissions:
   - Site heating (the routing data has no heating use)
   - Making the PE bag from LDPE resin
+  - PET film stretching and heat-setting (film making is a proxy from extrusion electricity)
+  - Coating the release liner (the liner is a proxy from paper and silicone)
