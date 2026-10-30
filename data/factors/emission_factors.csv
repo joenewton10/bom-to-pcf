@@ -1,16 +1,16 @@
 factor_id,name,value,unit,gwp_basis,geography,reference_year,source_id,data_type,dqr_tech,dqr_geo,dqr_time,notes,status
-EL_DE_GRID,German grid electricity with upstream chains,0.427,kg CO2e/kWh,Not stated by source (CO2 CH4 N2O),DE,2024,UBA_CC13_2025,secondary,2,1,1,"Preliminary 2024 value, 427 g/kWh. Excludes imports by UBA's accounting.",ACTIVE
-EL_DE_WIND,Onshore wind electricity (weak-wind site),0.0109,kg CO2e/kWh,Not verified,DE,2021,UBA_CC35_2021,secondary,2,1,4,"For the green electricity scenario. Value read from a report of the study, not the study itself.",ACTIVE
-NG_COMBUSTION,Natural gas combustion,0.18296,kg CO2e/kWh,AR4/AR5 per DESNZ,GB,2025,DESNZ_2025,secondary,2,3,1,Gross CV. UK proxy for Germany.,ACTIVE
-NG_WTT,Natural gas well-to-tank,0.03021,kg CO2e/kWh,AR4/AR5 per DESNZ,GB,2025,DESNZ_2025,secondary,2,3,1,Gross CV. UK proxy for Germany.,ACTIVE
-HGV_TTW,"Road freight, all HGVs, average laden",0.10163,kg CO2e/tkm,AR4/AR5 per DESNZ,GB,2025,DESNZ_2025,secondary,2,3,1,UK proxy for Germany. Add HGV_WTT for the full fuel chain.,ACTIVE
-HGV_WTT,"Road freight well-to-tank, all HGVs, average laden",0.02359,kg CO2e/tkm,AR4/AR5 per DESNZ,GB,2025,DESNZ_2025,secondary,2,3,1,UK proxy for Germany.,ACTIVE
-PET_RESIN_VIRGIN,"PET resin, virgin",2.23,kg CO2e/kg,Not verified,US,2018,APR_2020,secondary,2,4,5,"Resin only, no film making. US data. The European eco-profile could not be accessed.",ACTIVE
-PET_RESIN_RECYCLED,"PET resin, 100% post-consumer recycled",0.91,kg CO2e/kg,Not verified,US,2018,APR_2020,secondary,3,4,5,"For the recycled PET scenario. Post-consumer pellets, not film grade.",ACTIVE
-PET_FILM_CONVERSION,"PET film making, PROXY from extrusion electricity",0.2135,kg CO2e/kg,Not stated by source (CO2 CH4 N2O),DE,2024,CALC_FILM_PROXY,secondary,5,3,5,"0.5 kWh/kg x 0.427. Generic extrusion only; stretching and heat-setting are not covered, so likely too low.",ACTIVE
+EL_DE_GRID,German grid electricity with upstream chains,0.427,kg CO2e/kWh,Not stated by source (CO2 CH4 N2O),DE,2024,UBA_CC13_2025,secondary,3,1,1,"Preliminary 2024 value, 427 g/kWh. Excludes imports by UBA's accounting.",ACTIVE
+EL_DE_WIND,Onshore wind electricity (weak-wind site),0.0109,kg CO2e/kWh,Not verified,DE,2021,UBA_CC35_2021,secondary,3,1,4,"For the green electricity scenario. Value read from a report of the study, not the study itself.",ACTIVE
+NG_COMBUSTION,Natural gas combustion,0.18296,kg CO2e/kWh,AR4/AR5 per DESNZ,GB,2025,DESNZ_2025,secondary,3,5,1,Gross CV. UK proxy for Germany.,ACTIVE
+NG_WTT,Natural gas well-to-tank,0.03021,kg CO2e/kWh,AR4/AR5 per DESNZ,GB,2025,DESNZ_2025,secondary,3,5,1,Gross CV. UK proxy for Germany.,ACTIVE
+HGV_TTW,"Road freight, all HGVs, average laden",0.10163,kg CO2e/tkm,AR4/AR5 per DESNZ,GB,2025,DESNZ_2025,secondary,3,5,1,UK proxy for Germany. Add HGV_WTT for the full fuel chain.,ACTIVE
+HGV_WTT,"Road freight well-to-tank, all HGVs, average laden",0.02359,kg CO2e/tkm,AR4/AR5 per DESNZ,GB,2025,DESNZ_2025,secondary,3,5,1,UK proxy for Germany.,ACTIVE
+PET_RESIN_VIRGIN,"PET resin, virgin",2.23,kg CO2e/kg,Not verified,US,2018,APR_2020,secondary,3,5,5,"Resin only, no film making. US data. The European eco-profile could not be accessed.",ACTIVE
+PET_RESIN_RECYCLED,"PET resin, 100% post-consumer recycled",0.91,kg CO2e/kg,Not verified,US,2018,APR_2020,secondary,4,5,5,"For the recycled PET scenario. Post-consumer pellets, not film grade.",ACTIVE
+PET_FILM_CONVERSION,"PET film making, PROXY from extrusion electricity",0.2135,kg CO2e/kg,Not stated by source (CO2 CH4 N2O),DE,2024,CALC_FILM_PROXY,secondary,5,5,5,"0.5 kWh/kg x 0.427. Generic extrusion only; stretching and heat-setting are not covered, so likely too low.",ACTIVE
 ADHESIVE_ACRYLIC,Water-based dispersion adhesive,2.0,kg CO2e/kg,Not stated by source,DE,2014,IVK_2014,secondary,4,3,5,"Midpoint of the published 1-3 range, not a published value. Assumes a water-based acrylic.",ACTIVE
-LINER_SILICONE,"Silicone-coated release liner, PROXY from paper and silicone",0.585,kg CO2e/kg,Not verified,EU,2024,CALC_LINER_PROXY,secondary,5,2,2,"Sack kraft paper plus an assumed 1.25 g/m2 silicone coat. Excludes coating energy, so likely too low.",ACTIVE
-BOX_CORRUGATED,Corrugated box,0.673,kg CO2e/kg,Not verified,EU,2021,FEFCO_2021,secondary,3,2,4,"Fossil 669 + direct land use 4 kg/t, biogenic excluded. Source boundary is cradle-to-grave.",ACTIVE
-PE_LDPE,LDPE resin (for PE bag),2.16,kg CO2e/kg,AR6 (EF 3.1),EU,2026,PE_ECOPROFILE_2026,secondary,3,2,1,"Resin only, bag making not included. Report dated January 2026.",ACTIVE
-PALLET_WOOD,Wooden pallet,4.12,kg CO2e/piece,Not verified,CL,2022,VASQUEZ_2022,secondary,3,4,3,Per pallet. Average across four software tools (range 3.16-5.63). Biogenic treatment not stated.,ACTIVE
-WASTE_INCIN_PET,PET incineration (fossil CO2 only),2.29,kg CO2e/kg,Not applicable (CO2 only),GLO,2025,CALC_PET_STOICH,secondary,3,1,1,Calculated from PET's carbon content. No energy credit. Proxy for mixed laminate scrap.,ACTIVE
+LINER_SILICONE,"Silicone-coated release liner, PROXY from paper and silicone",0.585,kg CO2e/kg,Not verified,EU,2024,CALC_LINER_PROXY,secondary,5,3,1,"Sack kraft paper plus an assumed 1.25 g/m2 silicone coat. Excludes coating energy, so likely too low.",ACTIVE
+BOX_CORRUGATED,Corrugated box,0.673,kg CO2e/kg,Not verified,EU,2021,FEFCO_2021,secondary,3,3,4,"Fossil 669 + direct land use 4 kg/t, biogenic excluded. Source boundary is cradle-to-grave.",ACTIVE
+PE_LDPE,LDPE resin (for PE bag),2.16,kg CO2e/kg,AR6 (EF 3.1),EU,2026,PE_ECOPROFILE_2026,secondary,4,3,1,"Resin only, bag making not included. Report dated January 2026.",ACTIVE
+PALLET_WOOD,Wooden pallet,4.12,kg CO2e/piece,Not verified,CL,2022,VASQUEZ_2022,secondary,3,5,3,Per pallet. Average across four software tools (range 3.16-5.63). Biogenic treatment not stated.,ACTIVE
+WASTE_INCIN_PET,PET incineration (fossil CO2 only),2.29,kg CO2e/kg,Not applicable (CO2 only),GLO,2025,CALC_PET_STOICH,secondary,3,4,1,Calculated from PET's carbon content. No energy credit. Proxy for mixed laminate scrap.,ACTIVE

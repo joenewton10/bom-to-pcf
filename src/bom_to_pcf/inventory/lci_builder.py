@@ -24,6 +24,7 @@ KG_PER_TONNE = 1_000
 MASS_FACTOR_UNIT = "kg CO2e/kg"
 PIECE_FACTOR_UNIT = "kg CO2e/piece"
 PIECE_BOM_UNIT = "ST"
+UNKNOWN_DQR = 5
 
 
 class Inventory(BaseModel):
@@ -35,7 +36,12 @@ class Inventory(BaseModel):
 
 
 def supplier_factor(pcf: SupplierPcf) -> EmissionFactor:
-    """Express a usable supplier PCF as a primary emission factor."""
+    """Express a usable supplier PCF as a primary emission factor.
+
+    An unknown upstream DQR takes the worst score (PACT Methodology 3.0, section 4.2.3). An
+    unknown primary share stays None and counts as 0% (section 4.2.2).
+    """
+    dqr = pcf.dqr if pcf.dqr is not None else UNKNOWN_DQR
     return EmissionFactor(
         factor_id=f"SUPPLIER_{pcf.supplier_id}_{pcf.material_number}",
         name=f"Supplier PCF from {pcf.supplier_id}",
@@ -43,9 +49,9 @@ def supplier_factor(pcf: SupplierPcf) -> EmissionFactor:
         unit=f"kg CO2e/{pcf.declared_unit}",
         source_id=f"supplier_pcf:{pcf.version_id or pcf.supplier_id}",
         data_type="primary",
-        dqr_tech=pcf.dqr,
-        dqr_geo=pcf.dqr,
-        dqr_time=pcf.dqr,
+        dqr_tech=dqr,
+        dqr_geo=dqr,
+        dqr_time=dqr,
         primary_data_share=pcf.primary_data_share,
         status="ACTIVE",
     )

@@ -72,6 +72,30 @@ def test_liner_proxy_matches_its_documented_calculation() -> None:
     assert liner.value == pytest.approx((58.75 * 0.462 + 1.25 * 6.36) / 60, abs=0.001)
 
 
+def test_secondary_factors_respect_the_pact_quality_matrix() -> None:
+    """PACT Methodology 3.0, Table 12: secondary data can score 3 at best on technology."""
+    factors, _ = load_factors(FACTORS, SOURCES)
+    for factor in factors:
+        if factor.data_type == "secondary" and not factor.is_placeholder:
+            assert factor.dqr_tech >= 3, factor.factor_id
+
+
+def test_time_scores_follow_the_pact_matrix_for_a_2025_reference_year() -> None:
+    factors, _ = load_factors(FACTORS, SOURCES)
+    for factor in factors:
+        if factor.factor_id == "PET_FILM_CONVERSION":
+            continue  # built from a 2011 energy benchmark, so it takes its oldest input's score
+        gap = abs(2025 - factor.reference_year)
+        assert factor.dqr_time == min(max(gap, 1), 5), factor.factor_id
+
+
+def test_factors_from_outside_the_site_region_score_worst_on_geography() -> None:
+    factors, _ = load_factors(FACTORS, SOURCES)
+    for factor in factors:
+        if factor.geography in {"GB", "US", "CL"}:
+            assert factor.dqr_geo == 5, factor.factor_id
+
+
 def test_valid_factor_loads() -> None:
     factors, issues = load_factors(factor_file(), TEST_SOURCES)
     assert factors[0].value == 1.5

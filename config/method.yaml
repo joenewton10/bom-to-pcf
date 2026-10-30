@@ -18,11 +18,12 @@ allocation:
   overhead_step_id: OH
   overhead_machine_count: 5 # used by machine_hours only; representative value
 
-# An item is left out only if it is below flow_share on both mass and impact.
-# Items with no mass (energy, transport) are judged on impact alone.
+# TfS PCF Guideline 3.0, 5.2.3: where quantitative data are available, they shall be included.
+# So nothing is left out by default. If flow_share is raised, an item is left out only if it is
+# below it on both mass and impact. PACT Methodology 3.0, 3.3.1.2 caps the total at 3%.
 cut_off:
-  flow_share: 0.01
-  total_share: 0.05
+  flow_share: 0.0
+  total_share: 0.03
 
 factors:
   electricity: [EL_DE_GRID]
@@ -30,10 +31,6 @@ factors:
     road: [HGV_TTW, HGV_WTT]
   scrap:
     incineration: [WASTE_INCIN_PET]
-
-# Stages whose quantities come from the converting site itself.
-primary_share:
-  site_stages: [converting_energy, site_overhead, scrap_treatment]
 
 # Inside the boundary but not modelled, so reported with every result.
 known_omissions:

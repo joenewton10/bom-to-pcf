@@ -1,5 +1,14 @@
 # Changelog
 
+## Method checked against PACT 3.0 and TfS 3.0
+
+- Primary data share: an input is primary only if its activity data and emission factor both are. Site quantities multiplied by database factors now count as 0%.
+- An unknown supplier DQR now scores 5.
+- Cut-off: nothing with available data is left out by default, and the total limit is 3%, not 5%.
+- Factor quality scores redone against the PACT matrix.
+- The substitution credit keeps a result in draft, because PACT does not allow avoided emissions.
+- `docs/methodology.md` now cites sections of both documents.
+
 ## After Phase 7
 
 - Primary data share now uses the supplier's stated share. A PCF with no stated share is not counted as primary and is reported as unknown.

@@ -55,10 +55,13 @@ The progress file also holds the review decisions and review log.
 
 | Part of the footprint | How much counts as primary |
 |---|---|
-| Quantities from the converting site | All of it |
 | Supplier PCF with a stated primary share | That share of its impact |
 | Supplier PCF with no stated share | None, reported separately as unknown |
+| Site quantities with a database factor | None |
 | Database values | None |
+
+An input is primary only if both its activity data and its emission factor are (PACT Methodology 3.0,
+section 4.2.2; TfS PCF Guideline 3.0, section 5.2.11.1). See [methodology.md](methodology.md).
 
 ## Starting again
 
@@ -71,7 +74,5 @@ Start fresh is at the bottom of the Primary data page. Locally it moves `data/ap
 - Each material has one value in use, so buying one material from several suppliers is not modelled.
 - Two tabs stay in step because the app re-reads saved data on every page run. If two saves collide at
   the same instant, the later one is refused with a message, and history is not overwritten.
-- Site quantities count as primary in full, although they are multiplied by database factors. This
-  follows the project plan's definition and has not yet been checked against TfS or PACT.
 - Restoring into a local database with different saved history is refused. To start again, move or
   delete `data/app.db`.

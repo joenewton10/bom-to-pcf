@@ -26,9 +26,7 @@ def test_reference_case_matches_hand_calculation() -> None:
     assert result.kg_co2e_per_1000_pieces == pytest.approx(
         expected["kg_co2e_per_1000_pieces"], rel=WITHIN_TOLERANCE
     )
-    assert result.primary_data_share == pytest.approx(
-        expected["primary_data_share"], rel=WITHIN_TOLERANCE
-    )
+    assert result.primary_data_share == pytest.approx(expected["primary_data_share"], abs=1e-9)
     assert result.dqr.technological == pytest.approx(
         expected["dqr_technological"], rel=WITHIN_TOLERANCE
     )
@@ -189,7 +187,8 @@ def test_demo_data_is_draft_until_matches_are_reviewed(config: ProductConfig, mo
     assert result.status_label == LABEL_DRAFT
     assert any("unreviewed" in reason for reason in result.draft_reasons)
     assert result.mass_balance.passed
-    assert result.excluded_share <= method.cut_off.total_share
+    assert result.excluded == []
+    assert result.primary_data_share == 0
     assert any("stretching" in text for text in result.known_omissions)
 
 

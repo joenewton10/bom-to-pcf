@@ -1,16 +1,14 @@
-"""Share of the footprint based on primary data from suppliers or the site."""
+"""Share of the footprint based on primary data (PACT 3.0, 4.2.2; TfS 3.0, 5.2.11.1)."""
 
 from bom_to_pcf.models import EmissionFactor, ResultLine
 
 
-def primary_data_share(
-    lines: list[ResultLine], factors: dict[str, EmissionFactor], site_stages: list[str]
-) -> float:
-    """Return the primary share of known impact, from 0 to 1.
+def primary_data_share(lines: list[ResultLine], factors: dict[str, EmissionFactor]) -> float:
+    """Return the primary share of the absolute footprint, from 0 to 1.
 
-    Quantities from the site count in full. A supplier PCF counts by the primary share the
-    supplier states, and not at all if it states none. A PCF is not all primary just because a
-    supplier sent it, since it is usually built partly from database values.
+    An input is primary only if both its activity data and emission factor are, so a site's own
+    kWh multiplied by a database factor scores 0%. A supplier PCF counts by the share the supplier
+    states, and an unknown share scores 0%.
     """
     total = primary = 0.0
     for line in lines:
@@ -19,9 +17,7 @@ def primary_data_share(
         impact = abs(line.impact)
         total += impact
         factor = factors.get(line.factor_id or "")
-        if line.stage in site_stages:
-            primary += impact
-        elif factor is not None and factor.data_type == "primary":
+        if factor is not None and factor.data_type == "primary":
             primary += impact * (factor.primary_data_share or 0.0)
     return primary / total if total else 0.0
 

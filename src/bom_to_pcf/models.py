@@ -288,10 +288,6 @@ class FactorChoices(BaseModel):
     scrap: dict[str, list[str]]
 
 
-class PrimaryShareRules(BaseModel):
-    site_stages: list[str]
-
-
 class PrimaryDataRules(BaseModel):
     plausibility_low: float = Field(gt=0)
     plausibility_high: float = Field(gt=0)
@@ -308,7 +304,6 @@ class MethodConfig(BaseModel):
     allocation: AllocationRules
     cut_off: CutOffRules
     factors: FactorChoices
-    primary_share: PrimaryShareRules
     primary_data: PrimaryDataRules
     known_omissions: list[str] = []
 

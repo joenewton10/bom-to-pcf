@@ -63,6 +63,12 @@ st.caption(
     "PCF in kg CO₂e, cradle-to-gate. Data quality runs from 1 (best) to 5 (worst). "
     f"GWP set: {result.gwp_set}; sources do not all share one GWP basis."
 )
+if not result.primary_data_share and not result.primary_share_unknown:
+    st.caption(
+        "Primary data share is 0% because every emission factor comes from a database. PACT and "
+        "TfS count an input as primary only if its activity data and emission factor both are. "
+        "Supplier data raises this share."
+    )
 if result.primary_share_unknown:
     st.caption(
         f"{result.primary_share_unknown:.0%} of the footprint is supplier data with no stated "

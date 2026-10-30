@@ -25,20 +25,45 @@ def with_supplier(share: float | None):
 
 def test_supplier_share_weights_the_primary_share_by_hand() -> None:
     # Film 1.25 kg x 1.0 = 1.25. Total 1.25 + 0.05 + 0.13 + 0.06 = 1.49 (road T2 cut off).
-    # Primary = site 0.13 + 0.4 x 1.25 = 0.63.
-    assert with_supplier(0.4).primary_data_share == pytest.approx(0.63 / 1.49, rel=0.001)
+    # Only the film's factor is primary, so 0.4 x 1.25 = 0.5 counts. Site energy does not.
+    assert with_supplier(0.4).primary_data_share == pytest.approx(0.5 / 1.49, rel=0.001)
 
 
 def test_full_share_counts_in_full_and_zero_not_at_all() -> None:
-    assert with_supplier(1.0).primary_data_share == pytest.approx(1.38 / 1.49, rel=0.001)
-    assert with_supplier(0.0).primary_data_share == pytest.approx(0.13 / 1.49, rel=0.001)
+    assert with_supplier(1.0).primary_data_share == pytest.approx(1.25 / 1.49, rel=0.001)
+    assert with_supplier(0.0).primary_data_share == 0
 
 
-def test_no_stated_share_is_not_primary_and_is_reported_as_unknown() -> None:
+def test_site_quantities_with_a_database_factor_are_not_primary() -> None:
+    assert run(load_case()).primary_data_share == 0
+
+
+def test_site_quantities_with_a_primary_factor_count_by_its_share() -> None:
+    case = load_case()
+    case.factors = [
+        f.model_copy(update={"data_type": "primary", "primary_data_share": 1.0})
+        if f.factor_id == "ELEC"
+        else f
+        for f in case.factors
+    ]
+    assert run(case).primary_data_share == pytest.approx(0.13 / 2.74, rel=0.001)
+
+
+def test_no_stated_share_scores_zero_and_is_reported_as_unknown() -> None:
     result = with_supplier(None)
-    assert result.primary_data_share == pytest.approx(0.13 / 1.49, rel=0.001)
+    assert result.primary_data_share == 0
     assert result.primary_share_unknown == pytest.approx(1.25 / 1.49, rel=0.001)
     assert with_supplier(0.4).primary_share_unknown == 0
+
+
+def test_unknown_supplier_dqr_takes_the_worst_score() -> None:
+    case = load_case()
+    case.bundle.supplier_pcfs = [supplier_pcf(dqr=None)]
+    known = run(case)
+    case.bundle.supplier_pcfs = [supplier_pcf(dqr=1.0)]
+    assert known.dqr.technological > run(case).dqr.technological
+    film_line = next(line for line in known.lines if line.stage == "materials")
+    assert film_line.factor_id == "SUPPLIER_S_1"
 
 
 def test_share_is_used_through_a_stored_version() -> None:
@@ -48,7 +73,13 @@ def test_share_is_used_through_a_stored_version() -> None:
     record_submission(project, film(1.0), accept(1.0), "A")
     case = load_case()
     case.bundle = apply_primary(case.bundle, project)
-    assert run(case).primary_data_share == pytest.approx(0.63 / 1.49 + 0.1 * 1.25 / 1.49, rel=0.001)
+    assert run(case).primary_data_share == pytest.approx(0.5 * 1.25 / 1.49, rel=0.001)
+
+
+def test_substitution_credit_keeps_the_result_in_draft() -> None:
+    case = load_case()
+    case.method.allocation.scrap_recycling = "substitution"
+    assert any("PACT" in reason for reason in run(case).draft_reasons)
 
 
 def test_page_example_states_a_labelled_share() -> None:

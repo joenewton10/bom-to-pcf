@@ -21,6 +21,7 @@ from bom_to_pcf.models import (
     ResultLine,
 )
 
+SUBSTITUTION = "substitution"
 LABEL_FINAL = "Calculated"
 LABEL_DRAFT = "DRAFT"
 LABEL_PLACEHOLDERS = "DRAFT — contains placeholders"
@@ -94,6 +95,8 @@ def run_pcf(
             f"The mass balance is out by {balance.imbalance_share:.1%}, "
             f"above the {balance.tolerance_share:.1%} tolerance."
         )
+    if method.allocation.scrap_recycling == SUBSTITUTION:
+        draft_reasons.append("The substitution credit is not allowed by PACT Methodology 3.0.")
     if bundle.has_errors:
         draft_reasons.append("The inputs have validation errors.")
 
@@ -132,7 +135,7 @@ def run_pcf(
         draft_reasons=draft_reasons,
         missing=missing,
         known_omissions=method.known_omissions,
-        primary_data_share=primary_data_share(kept, known, method.primary_share.site_stages),
+        primary_data_share=primary_data_share(kept, known),
         primary_share_unknown=unknown_primary_share(kept, known),
         dqr=aggregate_dqr(kept, known),
         mass_balance=balance,

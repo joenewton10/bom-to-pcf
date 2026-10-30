@@ -20,6 +20,7 @@ def supplier_pcf(**overrides: object) -> SupplierPcf:
         "method": "ISO 14067",
         "boundary": "cradle-to-gate",
         "dqr": 1.0,
+        "primary_data_share": 0.5,
     }
     return SupplierPcf(**(fields | overrides))
 
@@ -51,7 +52,7 @@ def test_supplier_pcf_in_another_unit_is_not_used() -> None:
 
 
 def test_share_is_zero_with_no_impact() -> None:
-    assert primary_data_share([], {}, []) == 0.0
+    assert primary_data_share([], {}) == 0.0
 
 
 def test_dqr_is_none_with_no_scores() -> None:

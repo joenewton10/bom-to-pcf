@@ -20,7 +20,7 @@
 # Cut-off at 1%: only T2 (0.04% of impact, no mass) is below it. OH is 0.04 = 1.46%, so it stays.
 # Result: 2.7400 kg CO2e/kg, and 2.7400 x 2 = 5.4800 per 1000 pieces.
 #
-# Primary share: site stages are S1, S2, OH energy = 0.130 / 2.74 = 4.7445%.
+# Primary share: every factor is secondary, so it is 0%, even for the site's own quantities.
 # DQR is weighted by impact. Technological: film 1, box 3, transport 2, electricity 4:
 #   (1x2.5 + 3x0.05 + 2x0.06 + 4x0.13) / 2.74 = 3.29 / 2.74 = 1.20073
 product:
@@ -73,7 +73,6 @@ method:
     electricity: [ELEC]
     transport: { road: [ROAD, ROAD_WTT] }
     scrap: { incineration: [BURN] }
-  primary_share: { site_stages: [converting_energy, site_overhead, scrap_treatment] }
   primary_data:
     plausibility_low: 0.2
     plausibility_high: 5.0
@@ -83,7 +82,7 @@ method:
 expected:
   kg_co2e_per_kg: 2.74
   kg_co2e_per_1000_pieces: 5.48
-  primary_data_share: 0.047445
+  primary_data_share: 0.0
   dqr_technological: 1.20073
   by_stage:
     materials: 2.5

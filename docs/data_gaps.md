@@ -43,13 +43,24 @@ These are listed in `config/method.yaml` and reported with every result.
 | `EL_DE_WIND` | Value read from a report of the UBA study, not the study itself |
 | `WASTE_INCIN_PET` | Own calculation for pure PET, used for mixed laminate scrap |
 
+## Differences from PACT Methodology 3.0
+
+- **Electricity:** PACT requires the market-based method, allowing location-based only where no
+  contractual instruments exist (section 3.3.2.3). `EL_DE_GRID` is a national average mix, because no
+  German residual mix factor has been sourced.
+- **Waste with energy recovery:** under the cut-off approach, those emissions go to the energy user
+  (section 3.3.2.2). `WASTE_INCIN_PET` assumes no energy recovery, so it may overstate scrap treatment.
+- **Packaging:** PACT wants packaging reported separately. It is shown as its own stage, but the
+  headline includes it.
+
 ## GWP basis
 
 The plan's target is IPCC AR6 GWP100, but the sources do not share one basis: DESNZ uses AR4/AR5,
 Plastics Europe uses IPCC 2021, and several sources do not state a basis or were not verified. Values
 are used as published and not converted, because the gas-by-gas data needed is not available for all.
 
-DQR scores in `emission_factors.csv` are the author's judgement, not values from the sources.
+DQR scores in `emission_factors.csv` are the author's reading of the PACT Methodology 3.0 quality
+matrix (Table 12) for a 2025 reference year, not values from the sources.
 
 ## Representative values (mock, not measured)
 
